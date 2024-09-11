@@ -149,24 +149,77 @@
       </el-row>
     </div>
   </div>
-  <div class="kong"></div>
+  <!-- <div class="kong"></div> -->
   <!-- <el-card> -->
-  <div class="card-cont">
-    <el-card class="card-content">
-      <div class="markdown-content" v-html="htmlContent"></div>
-    </el-card>
-  </div>
+
   <div class="content">
     <div class="warp">
+      <el-row class="item-2">
+        <el-col :span="12" class="info-section-tit"></el-col>
+        <el-col :span="9" :offset="3" class="info-section-tit">玄策妙笔</el-col>
+      </el-row>
+      <el-row class="item-3">
+        <el-col :span="12" class="info-section-content"></el-col>
+        <el-col :span="9" :offset="3" class="info-section-content"
+          >AI攻略，祝你一路畅游</el-col
+        >
+      </el-row>
       <el-row class="item-1">
-        <el-col :span="12" class="info-section">
+        <el-col :span="12"> 111</el-col>
+        <el-col :span="9" :offset="3" class="info-section">
           <!-- <el-divider content-position="left">景观简介</el-divider> -->
           <el-row>
-            <el-col :span="24" class="tit">
-              土耳其穆拉(Muğla)费特希耶的猫
+            <el-col :span="24" :offset="0" class="tit">
+              <div class="container">
+                <!-- 按钮控制抽屉打开 -->
+                <el-button
+                  color="#0582ff"
+                  plain
+                  :dark="isDark"
+                  type="primary"
+                  @click="openDrawer('brief')"
+                  >打开简略内容</el-button
+                >
+                <el-button
+                  color="#0582ff"
+                  :dark="isDark"
+                  type="success"
+                  style="margin-left: 16px"
+                  @click="openDrawer('detailed')"
+                  >打开详细内容</el-button
+                >
+
+                <!-- 简略内容抽屉 -->
+                <el-drawer
+                  v-model="showBriefDrawer"
+                  title="简略内容"
+                  direction="ltr"
+                  size="35%"
+                  :before-close="handleClose"
+                >
+                  <div
+                    class="markdown-content"
+                    v-html="renderedBriefContent"
+                  ></div>
+                </el-drawer>
+
+                <!-- 详细内容抽屉 -->
+                <el-drawer
+                  v-model="showDetailedDrawer"
+                  title="详细内容"
+                  direction="rtl"
+                  size="35%"
+                  :before-close="handleClose"
+                >
+                  <div
+                    class="markdown-content"
+                    v-html="renderedDetailedContent"
+                  ></div>
+                </el-drawer>
+              </div>
             </el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="24">
               <el-rate
                 v-model="value"
@@ -176,8 +229,8 @@
                 score-template="{value} points"
               />
             </el-col>
-          </el-row>
-          <el-row class="details">
+          </el-row> -->
+          <!-- <el-row class="details">
             <el-col :span="24">
               <div class="info-item">
                 <span class="info-label">地址：</span>
@@ -196,15 +249,12 @@
                 <span class="info-value">+852-35503388</span>
               </div>
             </el-col>
-          </el-row>
-          <el-divider border-style="dashed" />
+          </el-row> -->
+          <!-- <el-divider border-style="dashed" /> -->
         </el-col>
-        <el-col :span="12"> 111</el-col>
       </el-row>
     </div>
   </div>
-
-  <!-- </el-card> -->
 </template>
   
 
@@ -212,11 +262,11 @@
 import { ref } from "vue";
 import { ElCard, ElIcon } from "element-plus";
 import { HomeFilled, Search, User } from "@element-plus/icons-vue";
-import { ElMessageBox } from 'element-plus';
+import { ElMessageBox } from "element-plus";
 import { computed } from "vue";
 import MarkdownIt from "markdown-it";
 // import { ElCard } from 'element-plus';
-
+import { ElButton, ElDrawer } from "element-plus";
 // import MarkdownIt from 'markdown-it';
 // https://element-plus.org/zh-CN/component/icon
 export default {
@@ -227,47 +277,121 @@ export default {
     HomeFilled,
     Search,
     User,
-    ElCard,
+    ElButton,
+    ElDrawer,
   },
   setup() {
-    const markdownContent = ref(`
-### 广州动物园游玩攻略
+    // 控制抽屉显示
+    const showBriefDrawer = ref(false);
+    const showDetailedDrawer = ref(false);
 
-带孩子去广州动物园是很好的亲子活动，这里有详细的交通、门票和游玩路线建议，帮你轻松游园。
+    // 简略内容
+    const briefContent = ref(`**广州动物园游玩攻略**
 
-#### 📍 基本信息
-- **地址**: 广州市越秀区先烈中路120号
-- **营业时间**: 8:00 - 18:00
-- **门票**: 成人20元，儿童/学生10元，60岁以上老人和1.2米以下儿童免费
+**基本信息**
+- 地址：越秀区先烈中路120号
+- 营业时间：8:00 - 18:00
+- 门票：
+  - 成人：20元
+  - 儿童/学生：10元
+  - 60岁以上老人和1.2米以下儿童免费
 
-#### 🚉 交通
-- **南门**: 地铁5号线动物园站B、C出口
-- **北门**: 地铁6号线黄花岗站A出口
-- **自驾**: 停车位少，容易塞车
+**交通指南**
+- **南门：** 地铁5号线动物园站B/C出口
+- **北门：** 地铁6号线黄花岗站A出口
+- **自驾：** 南北门车位少，易堵车，建议公共交通
 
-#### 🗺️ 推荐路线（北门进，南门出）
-1. 北门入园
-2. 经过：猴子、黑猩猩、熊、老虎、飞禽大观、大象、熊猫、长颈鹿等
-3. 南门出
+**推荐游玩路线**
+- **北门进，南门出：** 依次参观猴子、黑猩猩、老虎、河马、飞禽馆、大象、熊猫、长颈鹿、斑马等，沿途下坡轻松不走回头路。
 
-#### ⭐ 推荐打卡点
-- **熊猫馆**: 建议早去，避免排队
-- **大象馆**: 适合全家观赏
-- **长颈鹿园**: 可喂食长颈鹿（20元/把草料）
+**必看推荐**
+- **熊猫馆**：建议早点去，避免排队
+- **飞禽大观**：孔雀常开屏
+- **长颈鹿**：可近距离投喂（20元/把草料）
 
-#### 🍴 建议
-- 园内餐饮较贵且一般，自备干粮和水
+**小贴士**
+- 带推车方便带娃
+- 自带食物和水，园内餐饮较贵
+- 做好防晒，游玩时间约3小时以上
+- 选择工作日或早点入园避开人流高峰
 
-#### 💡 小贴士
-- **推车**: 带娃建议自备推车
-- **防晒**: 记得做好防晒
-- **防蚊**: 带好防蚊用品
-- **避开高峰**: 工作日或一早来园，避开人流
-祝大家游园愉快！
-    `);
+祝大家玩得开心！`);
 
+    // 详细内容
+    const detailedContent =
+      ref(`**广州动物园保姆级游玩攻略：不走回头路，20元畅玩！**
+
+**广州动物园简介**
+- 地址：越秀区先烈中路120号
+- 营业时间：8:00 - 18:00
+- 门票：
+  - 成人：20元
+  - 儿童/学生：10元
+  - 60岁以上老人和1.2米以下儿童免费
+  - 购票方式：线上（公众号）、现场扫码、窗口购票
+
+**交通指南**
+- **南门：** 地铁5号线动物园站B/C出口（近城堡花园，游乐场）
+- **北门：** 地铁6号线黄花岗站A出口（近大猩猩，猴子）
+- **公交：** 南北公交不同，请留意站点。
+- **自驾：** 南北门均易堵车且车位有限，建议公共交通出行。
+
+**推荐游玩路线：北门进，南门出（全程不走回头路）**
+1. **北门入园**
+2. 猴子🐵 - 黑猩猩🦍 - 熊🐻 - 豹子🐆
+3. 老虎🐯 - 河马🦛 - 锦鲤苑🐟 - 飞禽大观🐦🦚🦜
+4. 大象🐘 - 熊猫馆🐼 - 长颈鹿🦒 - 斑马🦓
+5. 犀牛🦏 - 袋鼠🦘 - 羊驼🦙 - 游乐场🎠
+6. 火烈鸟 - 天鹅🦢 - 南门出
+
+**游玩推荐重点：**
+- **熊猫馆🐼：** 位于园区中部，建议早点前往以避开排队高峰并占据有利位置观赏“星一”和“雅一”。
+- **大象馆🐘：** 可以近距离观赏大象，孩子们的最爱之一。
+- **虎山🐯：** 猎豹和老虎常常不太活跃，可能需要耐心等待。
+- **飞禽大观🦚🐦：** 内有活跃的孔雀，常开屏供观赏。
+- **狮子馆🦁：** 齐刘海发型的狮子“阿杭”常与狮后“贴贴”休息，需靠运气看到它们的活动。
+- **长颈鹿🦒：** 可购买草料（20元/把）进行近距离投喂，非常适合亲子互动。
+
+**游玩Tips：**
+1. **园区较大，建议带推车：** 特别是带小朋友的家庭，推车可以减轻体力消耗。
+2. **自带食物和水：** 园内餐饮价格较高且味道一般，自带干粮和水更为划算。
+3. **做好防晒：** 游玩时间预计3小时以上，请携带防晒用品。
+4. **建议错峰游玩：** 尽量选择工作日或早上8:00 - 9:00入园，避开高峰人流。
+
+**其他小贴士：**
+- **注意防蚊：** 园区内蚊虫较多，建议使用防蚊液。
+- **观察力必不可少：** 有些动物会藏在角落里，细心观察能带来更多惊喜。
+- **文明观赏：** 大部分动物是从马戏团解救出来的，请大家尊重它们的生活空间，不做打扰。
+
+**总结：**
+广州动物园是一个充满乐趣的亲子游好去处，从北门进南门出轻松不走回头路，可以一次性看到各种可爱的动物们。希望大家在游玩过程中，遵守园区规则，尊重动物的生活习性，祝大家游园愉快！`);
+
+    // Markdown 渲染
     const md = new MarkdownIt();
-    const htmlContent = computed(() => md.render(markdownContent.value));
+    const renderedBriefContent = computed(() => md.render(briefContent.value));
+    const renderedDetailedContent = computed(() =>
+      md.render(detailedContent.value)
+    );
+
+    // 打开抽屉
+    const openDrawer = (type) => {
+      if (type === "brief") {
+        showBriefDrawer.value = true;
+      } else if (type === "detailed") {
+        showDetailedDrawer.value = true;
+      }
+    };
+
+    // 关闭前确认
+    const handleClose = (done) => {
+      ElMessageBox.confirm("确定要关闭吗？")
+        .then(() => {
+          done();
+        })
+        .catch(() => {
+          // 处理取消操作
+        });
+    };
 
     // 使用 ref 来创建响应式数据
     const value = ref(3.7);
@@ -287,7 +411,13 @@ export default {
       HomeFilled,
       Search,
       User,
-      htmlContent,
+
+      showBriefDrawer,
+      showDetailedDrawer,
+      renderedBriefContent,
+      renderedDetailedContent,
+      openDrawer,
+      handleClose,
     };
   },
 };
@@ -565,6 +695,13 @@ a {
     .item-1 {
       .info-section {
         margin-bottom: 20px;
+
+        .tit {
+          .container {
+            margin: 0px;
+            padding: 0px;
+          }
+        }
       }
 
       .header h2 {
@@ -594,12 +731,34 @@ a {
         font-size: 1.5em;
         font-weight: bold;
         font-weight: bold;
-        margin-top: 20px;
+        margin-top: 5px;
         margin-bottom: 5px;
       }
 
       .el-rate {
         margin-bottom: 10px;
+      }
+    }
+    .item-3 {
+      .info-section-content {
+        font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+          sans-serif;
+        font-size: 17px; /* 基本字体大小 */
+        line-height: 1.47; /* 行高 */
+        font-weight: 400; /* 字体粗细 */
+        letter-spacing: -0.022em; /* 字母间距 */
+        color: rgba(29, 29, 31, 0.61); /* 默认文本颜色 */
+      }
+    }
+    .item-2 {
+      .info-section-tit {
+        font-size: 52px;
+        font-weight: 605;
+        line-height: 95%;
+        margin-bottom: 5px;
+        margin-top: 10px;
+        letter-spacing: -0.04em;
+        font-style: normal;
       }
     }
   }
@@ -655,6 +814,46 @@ a {
         text-decoration: underline;
       }
     }
+  }
+}
+
+.markdown-content {
+  font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+  line-height: 1.6; /* 原本 1.2 放大 4/6 倍 */
+  color: #333;
+
+  h1 {
+    font-size: 24px; /* 原本 18px 放大 4/6 倍 */
+    margin: 20px 0; /* 原本 15px 放大 4/6 倍 */
+  }
+
+  h2 {
+    font-size: 20px; /* 原本 15px 放大 4/6 倍 */
+    margin: 18px 0; /* 原本 13.5px 放大 4/6 倍 */
+  }
+
+  h3 {
+    font-size: 18px; /* 原本 13.5px 放大 4/6 倍 */
+    margin: 16px 0; /* 原本 12px 放大 4/6 倍 */
+  }
+
+  p {
+    font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+    margin: 10px 0; /* 原本 7.5px 放大 4/6 倍 */
+  }
+
+  ul {
+    padding-left: 20px; /* 原本 15px 放大 4/6 倍 */
+
+    li {
+      font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+      line-height: 1.5; /* 原本 1.125 放大 4/6 倍 */
+    }
+  }
+
+  a {
+    color: #007bff;
+    text-decoration: underline;
   }
 }
 </style>
