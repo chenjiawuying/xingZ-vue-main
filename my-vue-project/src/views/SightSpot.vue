@@ -156,14 +156,10 @@
     <div class="warp">
       <el-row class="item-2">
         <el-col :span="12" class="info-section-tit"></el-col>
-        <el-col :span="9" :offset="3" class="info-section-tit"
-          >玄策妙笔</el-col
-        >
+        <el-col :span="9" :offset="3" class="info-section-tit">玄策妙笔</el-col>
       </el-row>
       <el-row class="item-3">
-        <el-col :span="12" class="info-section-content"
-          ></el-col
-        >
+        <el-col :span="12" class="info-section-content"></el-col>
         <el-col :span="9" :offset="3" class="info-section-content"
           >AI攻略，祝你一路畅游</el-col
         >
@@ -173,13 +169,20 @@
         <el-col :span="9" :offset="3" class="info-section">
           <!-- <el-divider content-position="left">景观简介</el-divider> -->
           <el-row>
-            <el-col :span="24" :offset="0"   class="tit">
+            <el-col :span="24" :offset="0" class="tit">
               <div class="container">
                 <!-- 按钮控制抽屉打开 -->
-                <el-button color="#0582ff" plain :dark="isDark"  type="primary" @click="openDrawer('brief')"
+                <el-button
+                  color="#0582ff"
+                  plain
+                  :dark="isDark"
+                  type="primary"
+                  @click="openDrawer('brief')"
                   >打开简略内容</el-button
                 >
-                <el-button color="#0582ff"   :dark="isDark" 
+                <el-button
+                  color="#0582ff"
+                  :dark="isDark"
                   type="success"
                   style="margin-left: 16px"
                   @click="openDrawer('detailed')"
@@ -249,7 +252,6 @@
           </el-row> -->
           <!-- <el-divider border-style="dashed" /> -->
         </el-col>
-        
       </el-row>
     </div>
   </div>
@@ -694,14 +696,12 @@ a {
       .info-section {
         margin-bottom: 20px;
 
-        .tit{
-          .container{
+        .tit {
+          .container {
             margin: 0px;
-            padding:0px;
+            padding: 0px;
           }
-
         }
-
       }
 
       .header h2 {
@@ -814,6 +814,46 @@ a {
         text-decoration: underline;
       }
     }
+  }
+}
+
+.markdown-content {
+  font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+  line-height: 1.6; /* 原本 1.2 放大 4/6 倍 */
+  color: #333;
+
+  h1 {
+    font-size: 24px; /* 原本 18px 放大 4/6 倍 */
+    margin: 20px 0; /* 原本 15px 放大 4/6 倍 */
+  }
+
+  h2 {
+    font-size: 20px; /* 原本 15px 放大 4/6 倍 */
+    margin: 18px 0; /* 原本 13.5px 放大 4/6 倍 */
+  }
+
+  h3 {
+    font-size: 18px; /* 原本 13.5px 放大 4/6 倍 */
+    margin: 16px 0; /* 原本 12px 放大 4/6 倍 */
+  }
+
+  p {
+    font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+    margin: 10px 0; /* 原本 7.5px 放大 4/6 倍 */
+  }
+
+  ul {
+    padding-left: 20px; /* 原本 15px 放大 4/6 倍 */
+
+    li {
+      font-size: 16px; /* 原本 12px 放大 4/6 倍 */
+      line-height: 1.5; /* 原本 1.125 放大 4/6 倍 */
+    }
+  }
+
+  a {
+    color: #007bff;
+    text-decoration: underline;
   }
 }
 </style>
