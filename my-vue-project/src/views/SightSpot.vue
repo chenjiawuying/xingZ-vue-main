@@ -155,24 +155,31 @@
   <div class="content">
     <div class="warp">
       <el-row class="item-2">
-        <el-col :span="12" class="info-section-tit">玄策妙笔</el-col>
+        <el-col :span="12" class="info-section-tit"></el-col>
+        <el-col :span="9" :offset="3" class="info-section-tit"
+          >玄策妙笔</el-col
+        >
       </el-row>
       <el-row class="item-3">
         <el-col :span="12" class="info-section-content"
+          ></el-col
+        >
+        <el-col :span="9" :offset="3" class="info-section-content"
           >AI攻略，祝你一路畅游</el-col
         >
       </el-row>
       <el-row class="item-1">
-        <el-col :span="12" class="info-section">
+        <el-col :span="12"> 111</el-col>
+        <el-col :span="9" :offset="3" class="info-section">
           <!-- <el-divider content-position="left">景观简介</el-divider> -->
           <el-row>
-            <el-col :span="24" class="tit">
+            <el-col :span="24" :offset="0"   class="tit">
               <div class="container">
                 <!-- 按钮控制抽屉打开 -->
-                <el-button type="primary" @click="openDrawer('brief')"
+                <el-button color="#0582ff" plain :dark="isDark"  type="primary" @click="openDrawer('brief')"
                   >打开简略内容</el-button
                 >
-                <el-button
+                <el-button color="#0582ff"   :dark="isDark" 
                   type="success"
                   style="margin-left: 16px"
                   @click="openDrawer('detailed')"
@@ -242,7 +249,7 @@
           </el-row> -->
           <!-- <el-divider border-style="dashed" /> -->
         </el-col>
-        <el-col :span="12"> 111</el-col>
+        
       </el-row>
     </div>
   </div>
@@ -309,7 +316,8 @@ export default {
 祝大家玩得开心！`);
 
     // 详细内容
-    const detailedContent = ref(`**广州动物园保姆级游玩攻略：不走回头路，20元畅玩！**
+    const detailedContent =
+      ref(`**广州动物园保姆级游玩攻略：不走回头路，20元畅玩！**
 
 **广州动物园简介**
 - 地址：越秀区先烈中路120号
@@ -685,6 +693,15 @@ a {
     .item-1 {
       .info-section {
         margin-bottom: 20px;
+
+        .tit{
+          .container{
+            margin: 0px;
+            padding:0px;
+          }
+
+        }
+
       }
 
       .header h2 {
@@ -714,7 +731,7 @@ a {
         font-size: 1.5em;
         font-weight: bold;
         font-weight: bold;
-        margin-top: 20px;
+        margin-top: 5px;
         margin-bottom: 5px;
       }
 
@@ -738,6 +755,8 @@ a {
         font-size: 52px;
         font-weight: 605;
         line-height: 95%;
+        margin-bottom: 5px;
+        margin-top: 10px;
         letter-spacing: -0.04em;
         font-style: normal;
       }
