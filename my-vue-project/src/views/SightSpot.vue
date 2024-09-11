@@ -149,67 +149,24 @@
       </el-row>
     </div>
   </div>
-  <!-- <div class="kong"></div> -->
+  <div class="kong"></div>
   <!-- <el-card> -->
-
+  <div class="card-cont">
+    <el-card class="card-content">
+      <div class="markdown-content" v-html="htmlContent"></div>
+    </el-card>
+  </div>
   <div class="content">
     <div class="warp">
-      <el-row class="item-2">
-        <el-col :span="12" class="info-section-tit">玄策妙笔</el-col>
-      </el-row>
-      <el-row class="item-3">
-        <el-col :span="12" class="info-section-content"
-          >AI攻略，祝你一路畅游</el-col
-        >
-      </el-row>
       <el-row class="item-1">
         <el-col :span="12" class="info-section">
           <!-- <el-divider content-position="left">景观简介</el-divider> -->
           <el-row>
             <el-col :span="24" class="tit">
-              <div class="container">
-                <!-- 按钮控制抽屉打开 -->
-                <el-button type="primary" @click="openDrawer('brief')"
-                  >打开简略内容</el-button
-                >
-                <el-button
-                  type="success"
-                  style="margin-left: 16px"
-                  @click="openDrawer('detailed')"
-                  >打开详细内容</el-button
-                >
-
-                <!-- 简略内容抽屉 -->
-                <el-drawer
-                  v-model="showBriefDrawer"
-                  title="简略内容"
-                  direction="ltr"
-                  size="35%"
-                  :before-close="handleClose"
-                >
-                  <div
-                    class="markdown-content"
-                    v-html="renderedBriefContent"
-                  ></div>
-                </el-drawer>
-
-                <!-- 详细内容抽屉 -->
-                <el-drawer
-                  v-model="showDetailedDrawer"
-                  title="详细内容"
-                  direction="rtl"
-                  size="35%"
-                  :before-close="handleClose"
-                >
-                  <div
-                    class="markdown-content"
-                    v-html="renderedDetailedContent"
-                  ></div>
-                </el-drawer>
-              </div>
+              土耳其穆拉(Muğla)费特希耶的猫
             </el-col>
           </el-row>
-          <!-- <el-row>
+          <el-row>
             <el-col :span="24">
               <el-rate
                 v-model="value"
@@ -219,8 +176,8 @@
                 score-template="{value} points"
               />
             </el-col>
-          </el-row> -->
-          <!-- <el-row class="details">
+          </el-row>
+          <el-row class="details">
             <el-col :span="24">
               <div class="info-item">
                 <span class="info-label">地址：</span>
@@ -239,13 +196,15 @@
                 <span class="info-value">+852-35503388</span>
               </div>
             </el-col>
-          </el-row> -->
-          <!-- <el-divider border-style="dashed" /> -->
+          </el-row>
+          <el-divider border-style="dashed" />
         </el-col>
         <el-col :span="12"> 111</el-col>
       </el-row>
     </div>
   </div>
+
+  <!-- </el-card> -->
 </template>
   
 
@@ -253,11 +212,11 @@
 import { ref } from "vue";
 import { ElCard, ElIcon } from "element-plus";
 import { HomeFilled, Search, User } from "@element-plus/icons-vue";
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox } from 'element-plus';
 import { computed } from "vue";
 import MarkdownIt from "markdown-it";
 // import { ElCard } from 'element-plus';
-import { ElButton, ElDrawer } from "element-plus";
+
 // import MarkdownIt from 'markdown-it';
 // https://element-plus.org/zh-CN/component/icon
 export default {
@@ -268,46 +227,47 @@ export default {
     HomeFilled,
     Search,
     User,
-    ElButton,
-    ElDrawer,
+    ElCard,
   },
   setup() {
-    // 控制抽屉显示
-    const showBriefDrawer = ref(false);
-    const showDetailedDrawer = ref(false);
+    const markdownContent = ref(`
+### 广州动物园游玩攻略
 
-    // 简略内容
-    const briefContent = ref(`简略内容文本...`);
+带孩子去广州动物园是很好的亲子活动，这里有详细的交通、门票和游玩路线建议，帮你轻松游园。
 
-    // 详细内容
-    const detailedContent = ref(`详细内容文本...`);
+#### 📍 基本信息
+- **地址**: 广州市越秀区先烈中路120号
+- **营业时间**: 8:00 - 18:00
+- **门票**: 成人20元，儿童/学生10元，60岁以上老人和1.2米以下儿童免费
 
-    // Markdown 渲染
+#### 🚉 交通
+- **南门**: 地铁5号线动物园站B、C出口
+- **北门**: 地铁6号线黄花岗站A出口
+- **自驾**: 停车位少，容易塞车
+
+#### 🗺️ 推荐路线（北门进，南门出）
+1. 北门入园
+2. 经过：猴子、黑猩猩、熊、老虎、飞禽大观、大象、熊猫、长颈鹿等
+3. 南门出
+
+#### ⭐ 推荐打卡点
+- **熊猫馆**: 建议早去，避免排队
+- **大象馆**: 适合全家观赏
+- **长颈鹿园**: 可喂食长颈鹿（20元/把草料）
+
+#### 🍴 建议
+- 园内餐饮较贵且一般，自备干粮和水
+
+#### 💡 小贴士
+- **推车**: 带娃建议自备推车
+- **防晒**: 记得做好防晒
+- **防蚊**: 带好防蚊用品
+- **避开高峰**: 工作日或一早来园，避开人流
+祝大家游园愉快！
+    `);
+
     const md = new MarkdownIt();
-    const renderedBriefContent = computed(() => md.render(briefContent.value));
-    const renderedDetailedContent = computed(() =>
-      md.render(detailedContent.value)
-    );
-
-    // 打开抽屉
-    const openDrawer = (type) => {
-      if (type === "brief") {
-        showBriefDrawer.value = true;
-      } else if (type === "detailed") {
-        showDetailedDrawer.value = true;
-      }
-    };
-
-    // 关闭前确认
-    const handleClose = (done) => {
-      ElMessageBox.confirm("确定要关闭吗？")
-        .then(() => {
-          done();
-        })
-        .catch(() => {
-          // 处理取消操作
-        });
-    };
+    const htmlContent = computed(() => md.render(markdownContent.value));
 
     // 使用 ref 来创建响应式数据
     const value = ref(3.7);
@@ -327,13 +287,7 @@ export default {
       HomeFilled,
       Search,
       User,
-
-      showBriefDrawer,
-      showDetailedDrawer,
-      renderedBriefContent,
-      renderedDetailedContent,
-      openDrawer,
-      handleClose,
+      htmlContent,
     };
   },
 };
@@ -646,26 +600,6 @@ a {
 
       .el-rate {
         margin-bottom: 10px;
-      }
-    }
-    .item-3 {
-      .info-section-content {
-        font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
-          sans-serif;
-        font-size: 17px; /* 基本字体大小 */
-        line-height: 1.47; /* 行高 */
-        font-weight: 400; /* 字体粗细 */
-        letter-spacing: -0.022em; /* 字母间距 */
-        color: rgba(29, 29, 31, 0.61); /* 默认文本颜色 */
-      }
-    }
-    .item-2 {
-      .info-section-tit {
-        font-size: 52px;
-        font-weight: 605;
-        line-height: 95%;
-        letter-spacing: -0.04em;
-        font-style: normal;
       }
     }
   }
