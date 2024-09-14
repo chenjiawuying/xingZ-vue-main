@@ -47,16 +47,39 @@
 
   <div class="slideshow">
     <div class="wrap">
-      <el-row :gutter="100">
+      <el-row :gutter="20">
+        <el-col :span="24" class="div-div"></el-col>
         <el-col :span="6">
-          <div class="icon-text-container">
-            <el-icon size="35" color="yellow">
-              <trophy-base />
-            </el-icon>
-            <span>广州特色美食排行</span>
-          </div>
+          <el-row :gutter="100">
+            <el-col :span="24" class="div-div-div"></el-col>
+            <el-col :span="24">
+              <div class="icon-text-container">
+                <el-icon size="35" color="yellow">
+                  <trophy-base />
+                </el-icon>
+                <span class="tit-meishi">广州特色美食排行</span>
+              </div>
+            </el-col>
+            <el-col :span="24" class="container2">
+              <dish-table :tableData="dishes" />
+            </el-col>
+          </el-row>
         </el-col>
-        <el-col :span="18">2</el-col>
+        <el-col :span="17">
+          <el-carousel
+            height="350px"
+            indicator-position="outside"
+            class="rounded-carousel"
+          >
+            <el-carousel-item v-for="(item, index) in images" :key="index">
+              <img
+                :src="item"
+                alt="carousel image"
+                style="width: 100%; height: 100%; object-fit: cover"
+              />
+            </el-carousel-item>
+          </el-carousel>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -67,13 +90,14 @@ import { ref, computed } from "vue";
 import { ElCard, ElIcon } from "element-plus";
 import { TrophyBase } from "@element-plus/icons-vue";
 import MarkdownIt from "markdown-it";
-
+import DishTable from "@/components/DishTable.vue";
 export default {
   name: "SightSpot",
   components: {
     TrophyBase,
     ElCard,
     ElIcon,
+    DishTable,
   },
   setup() {
     const state1 = ref("");
@@ -102,6 +126,75 @@ export default {
       querySearch,
       handleSelect,
       clearInput,
+      images: [
+        require("../assets/食物1.jpg"), // 替换为你的图片 URL
+        require("../assets/食物1.jpg"), // 替换为你的图片 URL
+        require("../assets/食物1.jpg"), // 替换为你的图片 URL
+        require("../assets/食物1.jpg"), // 替换为你的图片 URL
+      ],
+      dishes: [
+        {
+          name: "汤",
+          score: 466,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "叉烧",
+          score: 216,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "烧鹅",
+          score: 112,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "叉烧包",
+          score: 87,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "猪手",
+          score: 73,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "牛河",
+          score: 53,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "煲仔饭",
+          score: 50,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "荷叶饭",
+          score: 2,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "冬瓜盅",
+          score: 2,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        {
+          name: "猪肚煲鸡",
+          score: 1,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
+        // Add more dishes here as needed
+      ],
     };
   },
 };
@@ -123,14 +216,25 @@ export default {
     /* 设置最小宽度 */
     min-width: 1200px;
 
+    .div-div {
+      margin-top: 25px;
+    }
+
+    .div-div-div {
+      margin-top: 150px;
+    }
+    .container2 {
+      /* 可能的样式调整 */
+      display: flex; /* 检查并调整布局 */
+      justify-content: flex-start; /* 控制内容位置 */
+    }
     .icon-text-container {
       display: flex;
       align-items: center; /* 垂直居中 */
-      span{
+      span {
         margin-left: 8px; /* 图标与文字之间的间距 */
       }
     }
-
   }
 }
 
@@ -450,6 +554,17 @@ a {
     color: #007bff;
     text-decoration: underline;
   }
+}
+
+.tit-meishi {
+  font-size: 16px; /* 字体大小 */
+  color: #ffa500; /* 字体颜色设为橙黄色 */
+  font-weight: bold; /* 可选：加粗字体 */
+}
+
+.rounded-carousel {
+  border-radius: 25px; /* 调整这个值以改变椭圆程度 */
+  overflow: hidden; /* 确保内容不会超出边界 */
 }
 </style>
     
