@@ -1,145 +1,192 @@
 <template>
-  <div class="container">
-    <!-- 按钮控制抽屉打开 -->
-    <el-button type="primary" @click="openDrawer('brief')">
-      打开简略内容
-    </el-button>
-    <el-button type="success" style="margin-left: 16px" @click="openDrawer('detailed')">
-      打开详细内容
-    </el-button>
+  <div class="table-container">
+    <el-table
+      :data="tableData"
+      :default-sort="{ prop: 'score', order: 'descending' }"
+      style="width: 225px; margin: auto;"
 
-    <!-- 简略内容抽屉 -->
-    <el-drawer
-      v-model="showBriefDrawer"
-      title="简略内容"
-      direction="ltr"
-      size="35%"
-      :before-close="handleClose"
     >
-      <div class="markdown-content" v-html="renderedBriefContent"></div>
-    </el-drawer>
+      <!-- 排名列 -->
+      <el-table-column
+        label="Rank"
+        width="50"
+        align="center"
+      >
+        <template v-slot="scope">
+          <div
+            class="rank-circle"
+            :style="{ backgroundColor: getColor(scope.$index) }"
+          >
+            {{ scope.$index + 1 }}
+          </div>
+        </template>
+      </el-table-column>
 
-    <!-- 详细内容抽屉 -->
-    <el-drawer
-      v-model="showDetailedDrawer"
-      title="详细内容"
-      direction="rtl"
-      size="35%"
-      :before-close="handleClose"
+      <!-- 菜名列 -->
+      <el-table-column width="85" prop="name" label="菜名" align="center">
+        <template v-slot="scope">
+          <span
+            class="food-name"
+            @mouseenter="showTooltip(scope.row, $event)"
+            @mouseleave="hideTooltip"
+          >
+            {{ scope.row.name }}
+          </span>
+        </template>
+      </el-table-column>
+
+      <!-- 分数列 -->
+      <el-table-column
+        label="分数"
+        width="80"
+        align="center"
+      >
+        <template v-slot="scope">
+          <div class="score-container">
+            <el-icon><arrow-up /></el-icon>
+            <span>{{ scope.row.score }}</span>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 自定义悬浮卡片 -->
+    <div
+      v-if="showCard"
+      class="custom-card"
+      :style="{ top: tooltipPosition.top + 'px', left: tooltipPosition.left + 'px' }"
     >
-      <div class="markdown-content" v-html="renderedDetailedContent"></div>
-    </el-drawer>
+      <img :src="currentItem.imageUrl" :alt="currentItem.name" class="card-image" />
+      <div class="card-info">
+        <h4>{{ currentItem.name }}</h4>
+        <p>这是{{ currentItem.name }}的美味图片。</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
-import { ElMessageBox, ElButton, ElDrawer, ElIcon } from 'element-plus';
-import { HomeFilled, Search, User } from '@element-plus/icons-vue';
-import MarkdownIt from 'markdown-it';
+import { ArrowUp } from '@element-plus/icons-vue';
 
 export default {
-  name: "SightSpot",
   components: {
-    ElButton,
-    ElDrawer,
-    ElIcon,
-    HomeFilled,
-    Search,
-    User,
+    ArrowUp,
   },
-  setup() {
-    // 控制抽屉显示
-    const showBriefDrawer = ref(false);
-    const showDetailedDrawer = ref(false);
-
-    // 简略内容
-    const briefContent = ref(`简略内容文本...`);
-
-    // 详细内容
-    const detailedContent = ref(`详细内容文本...`);
-
-    // Markdown 渲染
-    const md = new MarkdownIt();
-    const renderedBriefContent = computed(() => md.render(briefContent.value));
-    const renderedDetailedContent = computed(() => md.render(detailedContent.value));
-
-    // 打开抽屉
-    const openDrawer = (type) => {
-      if (type === 'brief') {
-        showBriefDrawer.value = true;
-      } else if (type === 'detailed') {
-        showDetailedDrawer.value = true;
-      }
-    };
-
-    // 关闭前确认
-    const handleClose = (done) => {
-      ElMessageBox.confirm('确定要关闭吗？')
-        .then(() => {
-          done();
-        })
-        .catch(() => {
-          // 处理取消操作
-        });
-    };
-
+  data() {
     return {
-      showBriefDrawer,
-      showDetailedDrawer,
-      renderedBriefContent,
-      renderedDetailedContent,
-      openDrawer,
-      handleClose,
+      tableData: [
+      { name: '汤', score: 466, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '叉烧', score: 216, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '烧鹅', score: 112, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '叉烧包', score: 87, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '猪手', score: 73, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '牛河', score: 53, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '煲仔饭', score: 50, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '荷叶饭', score: 2, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '冬瓜盅', score: 2, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      { name: '猪肚煲鸡', score: 1, imageUrl: 'https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d' },
+      // Add more dishes here as needed
+    ],
+      showCard: false,
+      currentItem: {},
+      tooltipPosition: { top: 0, left: 0 },
     };
+  },
+  methods: {
+    getColor(index) {
+      if (index === 0) return '#f56c6c'; // 深红色
+      if (index === 1) return '#e6a23c'; // 深橙色
+      if (index === 2) return '#e6a23c'; // 浅橙色
+      return '#e6a23c'; // 之后颜色保持相同
+    },
+    showTooltip(item, event) {
+      this.currentItem = item;
+      this.showCard = true;
+      // 计算卡片位置，相对于表格右侧显示
+      this.tooltipPosition.top = event.clientY - 50; // 调整显示位置
+      this.tooltipPosition.left = event.clientX + 20;
+    },
+    hideTooltip() {
+      this.showCard = false;
+    },
   },
 };
 </script>
 
-<style scoped lang="less">
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+<style scoped>
+.table-container {
+  position: relative;
 }
 
-.markdown-content {
+.rank-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin: auto;
   font-size: 12px;
-  line-height: 1.2;
-  color: #333;
+}
 
-  h1 {
-    font-size: 18px;
-    margin: 15px 0;
-  }
+.score-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* 调整分数字体大小 */
+}
 
-  h2 {
-    font-size: 15px;
-    margin: 13.5px 0;
-  }
+.el-table th,
+.el-table td {
+  padding: 4px;
+  font-size: 12px; /* 调整表格字体大小 */
+  text-align: center;
+}
 
-  h3 {
-    font-size: 13.5px;
-    margin: 12px 0;
-  }
+.el-table th {
+  background-color: #f5f7fa;
+}
 
-  p {
-    font-size: 12px;
-    margin: 7.5px 0;
-  }
+.el-table td {
+  border-bottom: 1px solid #ebeef5;
+}
 
-  ul {
-    padding-left: 15px;
+.custom-card {
+  position: absolute;
+  padding: 8px;
+  border: 1px solid #ebeef5;
+  background-color: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  width: 180px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
 
-    li {
-      font-size: 12px;
-      line-height: 1.125;
-    }
-  }
+.card-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
 
-  a {
-    color: #007bff;
-    text-decoration: underline;
-  }
+.card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.card-info p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #606266;
 }
 </style>

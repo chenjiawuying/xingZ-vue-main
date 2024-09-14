@@ -53,10 +53,14 @@
       <el-row :gutter="100">
         <el-col :span="6">
           <el-row>
-            <el-col :span="24"
-              ><el-avatar
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />C</el-col>
+            <el-col :span="24">
+              <div class="icon-text-container">
+                <el-icon size="35" color="yellow">
+                  <trophy-base />
+                </el-icon>
+                <span>广州特色美食排行</span>
+              </div></el-col
+            >
             <el-col :span="24">2</el-col>
           </el-row>
         </el-col>
@@ -70,10 +74,9 @@
     
   
   <script>
-import { UserFilled } from "@element-plus/icons-vue";
 import { ref } from "vue";
 import { ElCard, ElIcon } from "element-plus";
-import { HomeFilled, Search, User } from "@element-plus/icons-vue";
+import { HomeFilled, Search, User, TrophyBase } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 import { computed } from "vue";
 import MarkdownIt from "markdown-it";
@@ -85,6 +88,7 @@ import { ElButton, ElDrawer } from "element-plus";
 export default {
   name: "SightSpot",
   components: {
+    TrophyBase,
     ElCard,
     ElIcon,
     HomeFilled,
@@ -251,6 +255,15 @@ export default {
     max-width: 1200px;
     /* 设置最小宽度 */
     min-width: 1200px;
+
+    .icon-text-container {
+      display: flex;
+      align-items: center; /* 垂直居中 */
+      span{
+        margin-left: 8px; /* 图标与文字之间的间距 */
+      }
+    }
+
   }
 }
 
