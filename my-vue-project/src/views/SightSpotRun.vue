@@ -1,41 +1,6 @@
 <template>
-    <div class="header">
-      <div class="header-container">
-        <div class="nav-menu">
-          <div class="left-header">
-            <div class="title">
-              <span><a href="">行舟旅游网站</a></span>
-            </div>
-  
-            <div class="nav-items">
-              <span><a href="">首页</a> </span>
-              <span><a href="">目的地</a> </span>
-              <span><a href="">旅游产品</a> </span>
-              <span><a href="">关于我们</a> </span>
-              <span><a href="">更多内容</a> </span>
-            </div>
-          </div>
-  
-          <div>
-            <el-autocomplete
-              class="inline-input"
-              v-model="state1"
-              :fetch-suggestions="querySearch"
-              placeholder="请输入内容"
-              @select="handleSelect"
-              @focus="clearInput"
-              size="small"
-            ></el-autocomplete>
-            <p>{{ $t("message.hello") }}</p>
-          </div>
-          <div class="right-header">
-            <div class="userImage"></div>
-            <div class="nav-menu"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
+  <div>
+     <Header></Header>
     <div class="item-name">
       <div class="wrap">
         <div class="img-item-name"></div>
@@ -253,6 +218,7 @@
         </el-row>
       </div>
     </div>
+  </div>
   </template>
     
   
@@ -265,6 +231,7 @@
   import MarkdownIt from "markdown-it";
   // import { ElCard } from 'element-plus';
   import { ElButton, ElDrawer } from "element-plus";
+  import Header from "@/components/header.vue";
   // import MarkdownIt from 'markdown-it';
   // https://element-plus.org/zh-CN/component/icon
   export default {
@@ -277,6 +244,7 @@
       User,
       ElButton,
       ElDrawer,
+      Header
     },
     setup() {
       // 控制抽屉显示
