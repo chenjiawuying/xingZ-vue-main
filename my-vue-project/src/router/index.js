@@ -8,6 +8,7 @@ import My from '../views/My.vue'
 import indexBanner from '../views/index-Banner.vue'
 import SightSpot from '../views/SightSpot.vue'
 
+
 const routes = [
   {
     path: '/',

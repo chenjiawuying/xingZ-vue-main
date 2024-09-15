@@ -1,5 +1,6 @@
 <template>
-    <div class="header">
+<div>
+    <!-- <div class="header">
       <div class="header-container">
         <div class="nav-menu">
           <div class="left-header">
@@ -34,7 +35,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   
     <div class="item-name">
       <div class="wrap">
@@ -152,6 +153,7 @@
     <!-- <div class="kong"></div> -->
     <!-- <el-card> -->
   
+      
     <div class="content">
       <div class="warp">
         <el-row class="item-2">
@@ -253,6 +255,7 @@
         </el-row>
       </div>
     </div>
+</div>
   </template>
     
   
