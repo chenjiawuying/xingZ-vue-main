@@ -820,9 +820,9 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 .body {
-  // font-family: 'Roboto', sans-serif;
-  // background-color: #f5f5f5; // 全局背景色
-  // color: #333; // 全局文本颜色
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f6f6; // 全局背景色
+  color: #333; // 全局文本颜色
 }
 
 .slideshow {
@@ -836,6 +836,12 @@ export default {
   width: 1200px;
   .wrap {
     .rankingList {
+      border-radius: 8px;
+      box-shadow: 12px 12px 2px 1px rgba(102, 102, 204, 0.2);
+      border: 1px solid #d1caca;
+      background-color: white; // 全局背景色
+      color: #333; // 全局文本颜色
+
       .filter-container {
         padding: 10px 20px;
 
