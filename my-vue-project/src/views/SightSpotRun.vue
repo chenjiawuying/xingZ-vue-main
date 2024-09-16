@@ -1,122 +1,8 @@
 <template>
   <div>
      <Header></Header>
-    <div class="item-name">
-      <div class="wrap">
-        <div class="img-item-name"></div>
-        <a href=""> 景点名称 </a>
-      </div>
-    </div>
-    <div class="slideshow">
-      <div class="wrap">
-        <!-- <el-carousel :interval="4000" type="card" height="300px">
-          <el-carousel-item v-for="(image, index) in images" :key="index">
-            <img
-              :src="image"
-              alt="Carousel Image"
-              style="width: 100%; height: 100%; object-fit: cover"
-            />
-          </el-carousel-item>
-        </el-carousel> -->
-        <el-carousel class="rounded-carousel" height="400px" motion-blur>
-          <el-carousel-item v-for="(image, index) in images" :key="index">
-            <img
-              :src="image"
-              alt="Carousel Image"
-              style="width: 100%; height: 100%; object-fit: cover"
-              class="rounded-carousel-item"
-            />
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div class="warp2">
-        <el-row class="item-1">
-          <el-col :span="18" :offset="2" class="info-section">
-            <!-- <el-divider content-position="left">景观简介</el-divider> -->
-            <el-row>
-              <el-col :span="24" class="tit">
-                土耳其穆拉(Muğla)费特希耶的猫
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <el-rate
-                  v-model="value"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value} points"
-                />
-              </el-col>
-            </el-row>
-            <el-row class="details">
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">别名：</span>
-                  <span class="info-value">小橘猫</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">地址：</span>
-                  <span class="info-value">香港大屿山香港迪士尼乐园度假区</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">开放时间：</span>
-                  <span class="info-value">未开园；今日10:30-20:00开放</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">官方电话：</span>
-                  <span class="info-value">+852-35503388</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">提示信息：</span>
-                  <span class="info-value">这信息由网上收集而来的公共信息</span>
-                </div>
-              </el-col>
-            </el-row>
-            <el-divider border-style="dashed" />
-            <div class="tab-items">
-              <div class="flex flex-wrap gap-1">
-                <el-card class="custom-card" shadow="hover">
-                  <div class="card-content">
-                    <el-icon>
-                      <HomeFilled />
-                    </el-icon>
-                    <span>Always</span>
-                  </div>
-                </el-card>
-                <el-card class="custom-card" shadow="hover">
-                  <div class="card-content">
-                    <el-icon>
-                      <Search />
-                    </el-icon>
-                    <span>Hover</span>
-                  </div>
-                </el-card>
-                <el-card class="custom-card" shadow="hover">
-                  <div class="card-content">
-                    <el-icon>
-                      <User />
-                    </el-icon>
-                    <span>Never</span>
-                  </div>
-                </el-card>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <!-- <div class="kong"></div> -->
-    <!-- <el-card> -->
-  
+    
+    <Content></Content>
     <div class="content">
       <div class="warp">
         <el-row class="item-2">
@@ -232,6 +118,7 @@
   // import { ElCard } from 'element-plus';
   import { ElButton, ElDrawer } from "element-plus";
   import Header from "@/components/header.vue";
+  import Content from "@/components/content.vue";
   // import MarkdownIt from 'markdown-it';
   // https://element-plus.org/zh-CN/component/icon
   export default {
@@ -244,7 +131,8 @@
       User,
       ElButton,
       ElDrawer,
-      Header
+      Header,
+      Content
     },
     setup() {
       // 控制抽屉显示
