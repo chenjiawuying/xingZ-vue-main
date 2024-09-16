@@ -34,6 +34,7 @@
     </div>
   </div>
 
+  <div class="body">
   <div class="item-name">
     <div class="wrap">
       <el-breadcrumb separator="/">
@@ -79,25 +80,201 @@
               />
             </el-carousel-item>
           </el-carousel>
+
+          <div class="banner-food">
+            <el-icon size="25" color="#FF6347" class="icon">
+              <Food />
+            </el-icon>
+            <span class="banner-text">广州全部美食推荐</span>
+          </div>
+
+          <div class="rankingList">
+            <div class="filter-container">
+              <!-- 筛选项 - 特色 -->
+              <div class="filter-group">
+                <span class="filter-label">特色：</span>
+                <el-checkbox
+                  size="small"
+                  v-model="checkAllFeatures"
+                  :indeterminate="isIndeterminateFeatures"
+                  @change="handleCheckAllFeaturesChange"
+                >
+                  全选
+                </el-checkbox>
+                <el-checkbox-group
+                  v-model="selectedFeatures"
+                  @change="handleCheckedFeaturesChange"
+                  class="custom-group"
+                >
+                  <el-checkbox
+                    size="small"
+                    v-for="feature in features"
+                    :key="feature"
+                    :label="feature"
+                    :value="feature"
+                    class="custom-checkbox-button"
+                  >
+                    {{ feature }}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </div>
+
+              <!-- 筛选项 - 分类 -->
+              <div class="filter-group">
+                <span class="filter-label">分类：</span>
+                <el-checkbox
+                  size="small"
+                  v-model="checkAllCategories"
+                  :indeterminate="isIndeterminateCategories"
+                  @change="handleCheckAllCategoriesChange"
+                >
+                  全选
+                </el-checkbox>
+                <el-checkbox-group
+                  v-model="selectedCategories"
+                  @change="handleCheckedCategoriesChange"
+                  class="custom-group"
+                >
+                  <el-checkbox
+                    size="small"
+                    v-for="category in categories"
+                    :key="category"
+                    :label="category"
+                    :value="category"
+                    class="custom-checkbox-button"
+                  >
+                    {{ category }}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </div>
+
+              <!-- 筛选项 - 商圈 -->
+              <div class="filter-group">
+                <span class="filter-label">商圈：</span>
+                <el-select
+                  v-model="selectedBusinessArea"
+                  placeholder="请选择商圈"
+                  size="small"
+                  class="custom-select"
+                >
+                  <el-option
+                    v-for="area in businessAreas"
+                    :key="area"
+                    :label="area"
+                    :value="area"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+
+              <!-- 餐馆列表展示 -->
+              <div class="restaurant-list">
+                <div
+                  class="list-item"
+                  v-for="restaurant in paginatedRestaurants"
+                  :key="restaurant.name"
+                >
+                  <div class="card-content">
+                    <!-- 图片部分 -->
+                    <img
+                      :src="restaurant.image"
+                      class="restaurant-image"
+                      alt="Restaurant Image"
+                    />
+
+                    <!-- 信息部分 -->
+                    <div class="info-section">
+                      <h4 class="restaurant-name">{{ restaurant.name }}</h4>
+                      <div class="rating-section">
+                        <span class="restaurant-rating">
+                          {{ restaurant.rating }}
+                        </span>
+                        <el-rate
+                          v-model="restaurant.score"
+                          disabled
+                          :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                          class="score-stars"
+                        ></el-rate>
+                        <span class="score">{{ restaurant.score }} 分</span>
+                        <span class="reviews">
+                          {{ restaurant.reviews }} 条用户点评
+                        </span>
+                      </div>
+                      <div class="latest-review">
+                        <span class="reviewer">{{ restaurant.reviewer }}</span>
+                        的最新点评：
+                        <blockquote>{{ restaurant.latestReview }}</blockquote>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 添加虚线分隔 -->
+                  <div class="divider"></div>
+                </div>
+              </div>
+
+              <!-- 分页组件 -->
+              <el-pagination
+                v-model:current-page="currentPage"
+                :page-size="pageSize"
+                :page-sizes="[5, 10, 15, 20]"
+                :total="filteredRestaurants.length"
+                layout="prev, pager, next, sizes, jumper"
+                @size-change="handleSizeChange"
+                @current-change="handlePageChange"
+              >
+              </el-pagination>
+            </div>
+          </div>
         </el-col>
       </el-row>
     </div>
   </div>
+
+  </div>
+  
+
+
 </template>
 
 <script>
 import { ref, computed } from "vue";
-import { ElCard, ElIcon } from "element-plus";
-import { TrophyBase } from "@element-plus/icons-vue";
-import MarkdownIt from "markdown-it";
+import {
+  ElCard,
+  ElIcon,
+  ElAutocomplete,
+  ElCarousel,
+  ElCarouselItem,
+  ElCheckbox,
+  ElCheckboxGroup,
+  ElSelect,
+  ElOption,
+  ElRate,
+  ElBreadcrumb,
+  ElBreadcrumbItem,
+  ElPagination,
+} from "element-plus";
+import { TrophyBase, Food } from "@element-plus/icons-vue";
 import DishTable from "@/components/DishTable.vue";
+
 export default {
   name: "SightSpot",
   components: {
-    TrophyBase,
+    Food,
+    DishTable,
     ElCard,
     ElIcon,
-    DishTable,
+    ElAutocomplete,
+    ElCarousel,
+    ElCarouselItem,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElSelect,
+    ElOption,
+    ElRate,
+    ElBreadcrumb,
+    ElBreadcrumbItem,
+    ElPagination,
+    TrophyBase,
   },
   setup() {
     const state1 = ref("");
@@ -121,11 +298,443 @@ export default {
       console.log("Input cleared");
     };
 
+    const features = ref([
+      "不限",
+      "大众都爱吃",
+      "不吃不等于没来过",
+      "早茶",
+      "广式甜品",
+      "当地人最爱",
+    ]);
+    const selectedFeatures = ref([]);
+    const checkAllFeatures = ref(false);
+    const isIndeterminateFeatures = ref(true);
+
+    const handleCheckAllFeaturesChange = (val) => {
+      selectedFeatures.value = val
+        ? features.value.filter((f) => f !== "不限")
+        : [];
+      isIndeterminateFeatures.value = false;
+    };
+
+    const handleCheckedFeaturesChange = (value) => {
+      const checkedCount = value.length;
+      checkAllFeatures.value = checkedCount === features.value.length - 1;
+      isIndeterminateFeatures.value =
+        checkedCount > 0 && checkedCount < features.value.length - 1;
+    };
+
+    const categories = ref([
+      "不限",
+      "快餐",
+      "川菜",
+      "火锅",
+      "西餐",
+      "日料",
+      "粤菜",
+      "甜品",
+    ]);
+    const selectedCategories = ref([]);
+    const checkAllCategories = ref(false);
+    const isIndeterminateCategories = ref(true);
+
+    const handleCheckAllCategoriesChange = (val) => {
+      selectedCategories.value = val
+        ? categories.value.filter((c) => c !== "不限")
+        : [];
+      isIndeterminateCategories.value = false;
+    };
+
+    const handleCheckedCategoriesChange = (value) => {
+      const checkedCount = value.length;
+      checkAllCategories.value = checkedCount === categories.value.length - 1;
+      isIndeterminateCategories.value =
+        checkedCount > 0 && checkedCount < categories.value.length - 1;
+    };
+
+    const selectedBusinessArea = ref("不限");
+    const businessAreas = ref([
+      "不限",
+      "北京路",
+      "天河",
+      "越秀",
+      "海珠",
+      "荔湾",
+    ]);
+
+    const restaurants = ref([
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "九爷鸡(德政中路店)",
+        rating: "No.1",
+        latestReview:
+          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+        score: 5,
+        reviews: 1551,
+        type: "快餐",
+        area: "北京路",
+        image: require("../assets/食物1.jpg"),
+      },
+      {
+        name: "超记煲仔饭(珠光路店)",
+        rating: "No.2",
+        latestReview:
+          "浑噩一生的最新点评：煲仔饭的米，一定是丝苗米，细长晶莹...",
+        score: 4.4,
+        reviews: 61,
+        type: "快餐",
+        area: "珠光路",
+        image: require("../assets/食物1.jpg"),
+      },
+      // 更多餐馆数据...
+    ]);
+
+    const currentPage = ref(1);
+    const pageSize = ref(10); // 每页展示的条目数
+
+    const filteredRestaurants = computed(() => {
+      let filtered = restaurants.value.filter((restaurant) => {
+        const matchesCategory =
+          selectedCategories.value.length === 0 ||
+          selectedCategories.value.includes(restaurant.type);
+        const matchesArea =
+          selectedBusinessArea.value === "不限" ||
+          selectedBusinessArea.value === restaurant.area;
+        return matchesCategory && matchesArea;
+      });
+
+      // 按评分排序
+      filtered.sort((a, b) => b.score - a.score);
+
+      return filtered;
+    });
+
+    const paginatedRestaurants = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value;
+      const end = start + pageSize.value;
+      return filteredRestaurants.value.slice(start, end);
+    });
+
+    const handlePageChange = (page) => {
+      currentPage.value = page;
+    };
+
+    const handleSizeChange = (size) => {
+      pageSize.value = size;
+      currentPage.value = 1; // 重置到第一页
+    };
+
     return {
       state1,
       querySearch,
       handleSelect,
       clearInput,
+      features,
+      selectedFeatures,
+      checkAllFeatures,
+      isIndeterminateFeatures,
+      handleCheckAllFeaturesChange,
+      handleCheckedFeaturesChange,
+      categories,
+      selectedCategories,
+      checkAllCategories,
+      isIndeterminateCategories,
+      handleCheckAllCategoriesChange,
+      handleCheckedCategoriesChange,
+      selectedBusinessArea,
+      businessAreas,
+      restaurants,
+      currentPage,
+      pageSize,
+      filteredRestaurants,
+      paginatedRestaurants,
+      handlePageChange,
+      handleSizeChange,
       images: [
         require("../assets/食物1.jpg"), // 替换为你的图片 URL
         require("../assets/食物1.jpg"), // 替换为你的图片 URL
@@ -133,6 +742,12 @@ export default {
         require("../assets/食物1.jpg"), // 替换为你的图片 URL
       ],
       dishes: [
+        {
+          name: "汤",
+          score: 466,
+          imageUrl:
+            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
+        },
         {
           name: "汤",
           score: 466,
@@ -193,14 +808,23 @@ export default {
           imageUrl:
             "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
         },
-        // Add more dishes here as needed
+        // 更多菜品数据...
       ],
     };
   },
 };
 </script>
 
+
 <style lang="less" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+.body {
+  // font-family: 'Roboto', sans-serif;
+  // background-color: #f5f5f5; // 全局背景色
+  // color: #333; // 全局文本颜色
+}
+
 .slideshow {
   display: flex;
   padding-top: 20px;
@@ -211,6 +835,112 @@ export default {
   padding-right: 20px;
   width: 1200px;
   .wrap {
+    .rankingList {
+      .filter-container {
+        padding: 10px 20px;
+
+        .filter-group {
+          margin-bottom: 15px;
+
+          .filter-label {
+            font-weight: bold;
+            margin-right: 10px;
+          }
+
+          .custom-group {
+            display: flex;
+            flex-wrap: wrap;
+
+            .custom-checkbox-button {
+              margin-right: 10px;
+              margin-bottom: 5px;
+            }
+          }
+
+          .custom-select {
+            width: 70px;
+          }
+        }
+      }
+      .restaurant-list {
+        padding: 10px 0;
+
+        .list-item {
+          margin-bottom: 10px;
+
+          .card-content {
+            display: flex;
+            padding: 10px 0;
+
+            .restaurant-image {
+              width: 160px;
+              height: 160px;
+              object-fit: cover;
+              border-radius: 5px;
+              margin-right: 15px;
+            }
+
+            .info-section {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+
+              .restaurant-name {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                margin: 0 0 5px;
+              }
+
+              .rating-section {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+
+                .restaurant-rating {
+                  color: #f56c6c;
+                  font-weight: bold;
+                  margin-right: 10px;
+                }
+
+                .score-stars {
+                  margin-right: 10px;
+                }
+
+                .score {
+                  font-size: 14px;
+                  color: #666;
+                  margin-right: 15px;
+                }
+
+                .reviews {
+                  font-size: 12px;
+                  color: #999;
+                }
+              }
+
+              .latest-review {
+                font-size: 14px;
+                color: #666;
+                font-family: "KaiTi", "STKaiti", "华文楷体", serif;
+
+                .reviewer {
+                  font-weight: bold;
+                  color: #333;
+                }
+              }
+            }
+          }
+
+          .divider {
+            border-bottom: 1px dashed #ddd;
+            margin: 10px 0;
+          }
+        }
+      }
+    }
+
     width: 1200px;
     max-width: 1200px;
     /* 设置最小宽度 */
@@ -565,6 +1295,22 @@ a {
 .rounded-carousel {
   border-radius: 25px; /* 调整这个值以改变椭圆程度 */
   overflow: hidden; /* 确保内容不会超出边界 */
+}
+
+.banner-food {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  .icon {
+    margin-right: 10px;
+  }
+
+  .banner-text {
+    color: #333;
+  }
 }
 </style>
     
