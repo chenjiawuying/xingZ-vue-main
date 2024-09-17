@@ -1,239 +1,240 @@
 <template>
-  <div class="header">
-    <div class="header-container">
-      <div class="nav-menu">
-        <div class="left-header">
-          <div class="title">
-            <span><a href="">行舟旅游网站</a></span>
-          </div>
-          <div class="nav-items">
-            <span><a href="">首页</a></span>
-            <span><a href="">目的地</a></span>
-            <span><a href="">旅游产品</a></span>
-            <span><a href="">关于我们</a></span>
-            <span><a href="">更多内容</a></span>
-          </div>
-        </div>
+  <div class="affix-container">
+    <!-- 检查 target 的设置 -->
+    <el-affix :offset="0">
+      <div class="header">
+        <div class="header-container">
+          <div class="nav-menu">
+            <div class="left-header">
+              <div class="title">
+                <span><a href="#">行舟旅游网站</a></span>
+              </div>
+              <div class="nav-items">
+                <span><a href="#">首页</a></span>
+                <span><a href="#">目的地</a></span>
+                <span><a href="#">旅游产品</a></span>
+                <span><a href="#">关于我们</a></span>
+                <span><a href="#">更多内容</a></span>
+              </div>
+            </div>
 
-        <div class="search">
-          <el-autocomplete
-            v-model="state1"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
-            @select="handleSelect"
-            @focus="clearInput"
-            size="small"
-          ></el-autocomplete>
-          <p>{{ $t("message.hello") }}</p>
-        </div>
+            <div class="search">
+              <el-autocomplete
+                v-model="state1"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+                @select="handleSelect"
+                @focus="clearInput"
+                size="small"
+              ></el-autocomplete>
+              <p>{{ $t("message.hello") }}</p>
+            </div>
 
-        <div class="right-header">
-          <div class="userImage"></div>
+            <div class="right-header">
+              <div class="userImage"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </el-affix>
   </div>
 
   <div class="body">
-  <div class="item-name">
-    <div class="wrap">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">目的地</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">广东</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">广州</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">广州美食</a></el-breadcrumb-item>
-      </el-breadcrumb>
+    <div class="item-name">
+      <div class="wrap">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">目的地</el-breadcrumb-item>
+          <el-breadcrumb-item><a href="/">广东</a></el-breadcrumb-item>
+          <el-breadcrumb-item><a href="/">广州</a></el-breadcrumb-item>
+          <el-breadcrumb-item><a href="/">广州美食</a></el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-  </div>
 
-  <div class="slideshow">
-    <div class="wrap">
-      <el-row :gutter="20">
-        <el-col :span="24" class="div-div"></el-col>
-        <el-col :span="6">
-          <el-row :gutter="100">
-            <el-col :span="24" class="div-div-div"></el-col>
-            <el-col :span="24">
-              <div class="icon-text-container">
-                <el-icon size="35" color="yellow">
-                  <trophy-base />
-                </el-icon>
-                <span class="tit-meishi">广州特色美食排行</span>
-              </div>
-            </el-col>
-            <el-col :span="24" class="container2">
-              <dish-table :tableData="dishes" />
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="17">
-          <el-carousel
-            height="350px"
-            indicator-position="outside"
-            class="rounded-carousel"
-          >
-            <el-carousel-item v-for="(item, index) in images" :key="index">
-              <img
-                :src="item"
-                alt="carousel image"
-                style="width: 100%; height: 100%; object-fit: cover"
-              />
-            </el-carousel-item>
-          </el-carousel>
+    <div class="slideshow">
+      <div class="wrap">
+        <el-row :gutter="20">
+          <el-col :span="24" class="div-div"></el-col>
+          <el-col :span="6">
+            <el-row :gutter="100">
+              <el-col :span="24" class="div-div-div"></el-col>
+              <el-col :span="24">
+                <div class="icon-text-container">
+                  <el-icon size="35" color="yellow">
+                    <trophy-base />
+                  </el-icon>
+                  <span class="tit-meishi">广州特色美食排行</span>
+                </div>
+              </el-col>
+              <el-col :span="24" class="container2">
+                <dish-table :tableData="dishes" />
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="17">
+            <el-carousel height="350px" class="glass-carousel">
+              <el-carousel-item v-for="(item, index) in images" :key="index">
+                <div class="image-wrapper">
+                  <img
+                    :src="item"
+                    alt="carousel image"
+                    class="carousel-image"
+                  />
+                </div>
+              </el-carousel-item>
+            </el-carousel>
 
-          <div class="banner-food">
-            <el-icon size="25" color="#FF6347" class="icon">
-              <Food />
-            </el-icon>
-            <span class="banner-text">广州全部美食推荐</span>
-          </div>
+            <div class="banner-food">
+              <el-icon size="25" color="#FF6347" class="icon">
+                <Food />
+              </el-icon>
+              <span class="banner-text">广州全部美食推荐</span>
+            </div>
 
-          <div class="rankingList">
-            <div class="filter-container">
-              <!-- 筛选项 - 特色 -->
-              <div class="filter-group">
-                <span class="filter-label">特色：</span>
-                <el-checkbox
-                  size="small"
-                  v-model="checkAllFeatures"
-                  :indeterminate="isIndeterminateFeatures"
-                  @change="handleCheckAllFeaturesChange"
-                >
-                  全选
-                </el-checkbox>
-                <el-checkbox-group
-                  v-model="selectedFeatures"
-                  @change="handleCheckedFeaturesChange"
-                  class="custom-group"
-                >
+            <div class="rankingList">
+              <div class="filter-container">
+                <!-- 筛选项 - 特色 -->
+                <div class="filter-group">
+                  <span class="filter-label">特色：</span>
                   <el-checkbox
                     size="small"
-                    v-for="feature in features"
-                    :key="feature"
-                    :label="feature"
-                    :value="feature"
-                    class="custom-checkbox-button"
+                    v-model="checkAllFeatures"
+                    :indeterminate="isIndeterminateFeatures"
+                    @change="handleCheckAllFeaturesChange"
                   >
-                    {{ feature }}
+                    全选
                   </el-checkbox>
-                </el-checkbox-group>
-              </div>
+                  <el-checkbox-group
+                    v-model="selectedFeatures"
+                    @change="handleCheckedFeaturesChange"
+                    class="custom-group"
+                  >
+                    <el-checkbox
+                      size="small"
+                      v-for="feature in features"
+                      :key="feature"
+                      :label="feature"
+                      :value="feature"
+                      class="custom-checkbox-button"
+                    >
+                      {{ feature }}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </div>
 
-              <!-- 筛选项 - 分类 -->
-              <div class="filter-group">
-                <span class="filter-label">分类：</span>
-                <el-checkbox
-                  size="small"
-                  v-model="checkAllCategories"
-                  :indeterminate="isIndeterminateCategories"
-                  @change="handleCheckAllCategoriesChange"
-                >
-                  全选
-                </el-checkbox>
-                <el-checkbox-group
-                  v-model="selectedCategories"
-                  @change="handleCheckedCategoriesChange"
-                  class="custom-group"
-                >
+                <!-- 筛选项 - 分类 -->
+                <div class="filter-group">
+                  <span class="filter-label">分类：</span>
                   <el-checkbox
                     size="small"
-                    v-for="category in categories"
-                    :key="category"
-                    :label="category"
-                    :value="category"
-                    class="custom-checkbox-button"
+                    v-model="checkAllCategories"
+                    :indeterminate="isIndeterminateCategories"
+                    @change="handleCheckAllCategoriesChange"
                   >
-                    {{ category }}
+                    全选
                   </el-checkbox>
-                </el-checkbox-group>
-              </div>
-
-              <!-- 筛选项 - 商圈 -->
-              <div class="filter-group">
-                <span class="filter-label">商圈：</span>
-                <el-select
-                  v-model="selectedBusinessArea"
-                  placeholder="请选择商圈"
-                  size="small"
-                  class="custom-select"
-                >
-                  <el-option
-                    v-for="area in businessAreas"
-                    :key="area"
-                    :label="area"
-                    :value="area"
+                  <el-checkbox-group
+                    v-model="selectedCategories"
+                    @change="handleCheckedCategoriesChange"
+                    class="custom-group"
                   >
-                  </el-option>
-                </el-select>
-              </div>
+                    <el-checkbox
+                      size="small"
+                      v-for="category in categories"
+                      :key="category"
+                      :label="category"
+                      :value="category"
+                      class="custom-checkbox-button"
+                    >
+                      {{ category }}
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </div>
 
-              <!-- 餐馆列表展示 -->
-              <div class="restaurant-list">
-                <div
-                  class="list-item"
-                  v-for="restaurant in paginatedRestaurants"
-                  :key="restaurant.name"
-                >
-                  <div class="card-content">
-                    <!-- 图片部分 -->
-                    <img
-                      :src="restaurant.image"
-                      class="restaurant-image"
-                      alt="Restaurant Image"
-                    />
+                <!-- 筛选项 - 商圈 -->
+                <div class="filter-group">
+                  <span class="filter-label">商圈：</span>
+                  <el-select
+                    v-model="selectedBusinessArea"
+                    placeholder="请选择商圈"
+                    size="small"
+                    class="custom-select"
+                  >
+                    <el-option
+                      v-for="area in businessAreas"
+                      :key="area"
+                      :label="area"
+                      :value="area"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
 
-                    <!-- 信息部分 -->
-                    <div class="info-section">
-                      <h4 class="restaurant-name">{{ restaurant.name }}</h4>
-                      <div class="rating-section">
-                        <span class="restaurant-rating">
-                          {{ restaurant.rating }}
-                        </span>
-                        <el-rate
-                          v-model="restaurant.score"
-                          disabled
-                          :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                          class="score-stars"
-                        ></el-rate>
-                        <span class="score">{{ restaurant.score }} 分</span>
-                        <span class="reviews">
-                          {{ restaurant.reviews }} 条用户点评
-                        </span>
-                      </div>
-                      <div class="latest-review">
-                        <span class="reviewer">{{ restaurant.reviewer }}</span>
-                        的最新点评：
-                        <blockquote>{{ restaurant.latestReview }}</blockquote>
+                <!-- 餐馆列表展示 -->
+                <div class="restaurant-list">
+                  <div
+                    class="list-item"
+                    v-for="restaurant in paginatedRestaurants"
+                    :key="restaurant.name"
+                  >
+                    <div class="card-content">
+                      <!-- 图片部分 -->
+                      <img
+                        :src="restaurant.image"
+                        class="restaurant-image"
+                        alt="Restaurant Image"
+                      />
+
+                      <!-- 信息部分 -->
+                      <div class="info-section">
+                        <h4 class="restaurant-name">{{ restaurant.name }}</h4>
+                        <div class="rating-section">
+                          <span class="restaurant-rating">
+                            {{ restaurant.rating }}
+                          </span>
+                          <el-rate
+                            v-model="restaurant.score"
+                            disabled
+                            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                            class="score-stars"
+                          ></el-rate>
+                          <span class="score">{{ restaurant.score }} 分</span>
+                          <span class="reviews">
+                            {{ restaurant.reviews }} 条用户点评
+                          </span>
+                        </div>
+                        <div class="latest-review">
+                          <span class="reviewer">{{
+                            restaurant.reviewer
+                          }}</span>
+                          的最新点评：
+                          <blockquote>{{ restaurant.latestReview }}</blockquote>
+                        </div>
                       </div>
                     </div>
+                    <!-- 添加虚线分隔 -->
+                    <div class="divider"></div>
                   </div>
-                  <!-- 添加虚线分隔 -->
-                  <div class="divider"></div>
                 </div>
-              </div>
 
-              <!-- 分页组件 -->
-              <el-pagination
-                v-model:current-page="currentPage"
-                :page-size="pageSize"
-                :page-sizes="[5, 10, 15, 20]"
-                :total="filteredRestaurants.length"
-                layout="prev, pager, next, sizes, jumper"
-                @size-change="handleSizeChange"
-                @current-change="handlePageChange"
-              >
-              </el-pagination>
+                <!-- 分页组件 -->
+                <el-pagination
+                  v-model:current-page="currentPage"
+                  :page-size="pageSize"
+                  :page-sizes="[5, 10, 15, 20]"
+                  :total="filteredRestaurants.length"
+                  layout="prev, pager, next, sizes, jumper"
+                  @size-change="handleSizeChange"
+                  @current-change="handlePageChange"
+                >
+                </el-pagination>
+              </div>
             </div>
-          </div>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
-
-  </div>
-  
-
-
 </template>
 
 <script>
@@ -817,11 +818,11 @@ export default {
 
 
 <style lang="less" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 
 .body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f9f6f6; // 全局背景色
+  font-family: "Roboto", sans-serif;
+  // background-color: #f9f6f6; // 全局背景色
   color: #333; // 全局文本颜色
 }
 
@@ -975,7 +976,11 @@ export default {
 }
 
 .item-name {
-  padding-top: 72px;
+  // padding-top: 36px;
+  height: 50px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
   .wrap {
     margin: 0 auto;
     /* 设置上下外边距为0，左右外边距自动 */
@@ -1017,98 +1022,105 @@ a {
   background-color: lighten(#f06, 10%);
 }
 
-.header {
-  position: fixed; /* 固定在页面顶部 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 72px;
-  z-index: 1000; /* 确保导航栏在其他元素之上 */
-  background-color: white; /* 背景颜色 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+// 定义通用变量
+@color-primary: rgba(29, 33, 41, 1);
+@font-kalam-bold: "Kalam-Bold";
+@font-harmony: "HarmonyOSSansSC-Regular";
+@bg-color: white;
+@box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+@header-height: 72px;
+@container-width: 1200px;
+@user-img-url: url("/src/assets/6556e75090ab84325baa614a.png");
 
-  .header-container {
-    position: relative;
+.affix-container {
+  width: 100%;
+
+  .header {
     width: 100%;
-    max-width: 1200px;
-    /* 设置最小宽度 */
-    min-width: 1200px;
-    height: 72px;
+    height: @header-height;
+    z-index: 1000; // 确保导航栏在其他元素之上
+    background-color: @bg-color; // 背景颜色
+    box-shadow: @box-shadow; // 添加阴影
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 20px;
     box-sizing: border-box;
 
-    .nav-menu {
+    .header-container {
+      position: relative;
+      width: 100%;
+      max-width: @container-width;
+      min-width: @container-width;
+      height: @header-height;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
 
-      .left-header {
+      .nav-menu {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 60px;
+        width: 100%;
 
-        .title {
-          color: rgba(29, 33, 41, 1);
-          font-size: 22px;
-          font-weight: 700;
-          font-family: "Kalam-Bold";
-          white-space: nowrap;
-        }
-
-        .nav-items {
+        .left-header {
           display: flex;
-          gap: 32px;
+          align-items: center;
+          gap: 60px;
 
-          span {
-            color: rgba(29, 33, 41, 1);
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 400;
-            font-weight: 400;
-            font-family: "HarmonyOSSansSC-Regular";
+          .title {
+            color: @color-primary;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: @font-kalam-bold;
             white-space: nowrap;
           }
-        }
-      }
 
-      .right-header {
-        display: flex;
-        align-items: center;
-        gap: 24px;
+          .nav-items {
+            display: flex;
+            gap: 32px;
 
-        .userImage {
-          width: 40px;
-          height: 40px;
-          background-image: var(--bg-img);
-          background-position: center;
-          background-size: cover;
-          background-repeat: no-repeat;
-          border-radius: 50%;
-          --bg-img: var(--img-url);
-          --img-url: url("/src/assets/6556e75090ab84325baa614a.png");
+            span {
+              color: @color-primary;
+              font-size: 16px;
+              line-height: 24px;
+              font-weight: 400;
+              font-family: @font-harmony;
+              white-space: nowrap;
+            }
+          }
         }
 
-        .nav-menu {
+        .search {
           display: flex;
-          width: 40px;
-          height: 40px;
-          background-image: var(--bg-img);
-          background-size: cover;
-          --bg-img: var(--img-url);
-          --img-url: url("/src/assets/3e260053f3fe1a53d64fd219a5465acdad443bce.png");
+          align-items: center;
+          gap: 10px;
+        }
+
+        .right-header {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+
+          .userImage {
+            width: 40px;
+            height: 40px;
+            background-image: var(--bg-img);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            --bg-img: var(--img-url);
+            --img-url: @user-img-url;
+          }
         }
       }
     }
   }
 }
+
+
 .kong {
   padding-top: 20px;
 }
@@ -1297,10 +1309,40 @@ a {
   color: #ffa500; /* 字体颜色设为橙黄色 */
   font-weight: bold; /* 可选：加粗字体 */
 }
+.glass-carousel {
+  border-radius: 20px; /* 圆角 */
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 柔和的阴影 */
+  backdrop-filter: blur(10px); /* 模糊背景 */
+  background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明边框 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  margin-bottom: 34px;
+}
 
-.rounded-carousel {
-  border-radius: 25px; /* 调整这个值以改变椭圆程度 */
-  overflow: hidden; /* 确保内容不会超出边界 */
+.glass-carousel:hover {
+  transform: scale(1.02); /* 悬停时轻微放大 */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* 悬停时增强阴影 */
+}
+
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease, filter 0.3s ease; /* 图片的动画效果 */
+}
+
+.carousel-image:hover {
+  transform: scale(1.08); /* 图片悬停时放大效果 */
+  filter: brightness(1.1); /* 悬停时增加亮度 */
 }
 
 .banner-food {
