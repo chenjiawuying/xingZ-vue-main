@@ -72,7 +72,7 @@
             </el-row>
           </el-col>
           <el-col :span="17">
-            <el-carousel height="350px" class="glass-carousel">
+            <el-carousel height="360px" class="glass-carousel">
               <el-carousel-item v-for="(item, index) in images" :key="index">
                 <div class="image-wrapper">
                   <img
@@ -838,12 +838,15 @@ export default {
   .wrap {
     .rankingList {
       border-radius: 8px;
-      box-shadow: 12px 12px 2px 1px rgba(102, 102, 204, 0.2);
-      border: 1px solid #d1caca;
+      
+      box-shadow: 12px 12px 2px 1px #a6b2c745;
+      border: 1px solid #a39d9d;
       background-color: white; // 全局背景色
       color: #333; // 全局文本颜色
 
       .filter-container {
+        // background-color: rgba(151, 243, 109, 0.774);
+        
         padding: 10px 20px;
 
         .filter-group {
@@ -1310,6 +1313,8 @@ a {
   font-weight: bold; /* 可选：加粗字体 */
 }
 .glass-carousel {
+
+  // width: 750px;
   border-radius: 20px; /* 圆角 */
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 柔和的阴影 */

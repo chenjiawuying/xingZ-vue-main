@@ -101,9 +101,14 @@ export default {
 
 <style lang="less" scoped>
 .table-container {
-  position: relative;
-  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
-  border: 1px solid #d1caca;
+
+
+      
+    position: relative;
+    box-shadow: 12px 12px 2px 1px #a6b2c745;
+    border: 1px solid #a39d9d;
+    border-radius: 4px;
+
   .rank-circle {
     width: 24px;
     height: 24px;
