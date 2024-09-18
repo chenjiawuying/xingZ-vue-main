@@ -1,114 +1,43 @@
 <template>
-  <div>
-     <Header></Header>
-    
-    <Content></Content>
-    <div class="content">
-      <div class="warp">
-        <el-row class="item-2">
-          <el-col :span="12" class="info-section-tit"></el-col>
-          <el-col :span="9" :offset="3" class="info-section-tit"
-            >玄策妙笔</el-col
-          >
-        </el-row>
-        <el-row class="item-3">
-          <el-col :span="12" class="info-section-content"
-            ></el-col
-          >
-          <el-col :span="9" :offset="3" class="info-section-content"
-            >AI攻略，祝你一路畅游</el-col
-          >
-        </el-row>
-        <el-row class="item-1">
-          <el-col :span="12"> 111</el-col>
-          <el-col :span="9" :offset="3" class="info-section">
-            <!-- <el-divider content-position="left">景观简介</el-divider> -->
-            <el-row>
-              <el-col :span="24" :offset="0"   class="tit">
-                <div class="container">
-                  <!-- 按钮控制抽屉打开 -->
-                  <el-button color="#0582ff" plain :dark="isDark"  type="primary" @click="openDrawer('brief')"
-                    >打开简略内容</el-button
-                  >
-                  <el-button color="#0582ff"   :dark="isDark" 
-                    type="success"
-                    style="margin-left: 16px"
-                    @click="openDrawer('detailed')"
-                    >打开详细内容</el-button
-                  >
+    <div class="header">
+      <div class="header-container">
+        <div class="nav-menu">
+          <div class="left-header">
+            <div class="title">
+              <span><a href="">行舟旅游网站</a></span>
+            </div>
   
-                  <!-- 简略内容抽屉 -->
-                  <el-drawer
-                    v-model="showBriefDrawer"
-                    title="简略内容"
-                    direction="ltr"
-                    size="35%"
-                    :before-close="handleClose"
-                  >
-                    <div
-                      class="markdown-content"
-                      v-html="renderedBriefContent"
-                    ></div>
-                  </el-drawer>
+            <div class="nav-items">
+              <span><a href="">首页</a> </span>
+              <span><a href="">目的地</a> </span>
+              <span><a href="">旅游产品</a> </span>
+              <span><a href="">关于我们</a> </span>
+              <span><a href="">更多内容</a> </span>
+            </div>
+          </div>
   
-                  <!-- 详细内容抽屉 -->
-                  <el-drawer
-                    v-model="showDetailedDrawer"
-                    title="详细内容"
-                    direction="rtl"
-                    size="35%"
-                    :before-close="handleClose"
-                  >
-                    <div
-                      class="markdown-content"
-                      v-html="renderedDetailedContent"
-                    ></div>
-                  </el-drawer>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- <el-row>
-              <el-col :span="24">
-                <el-rate
-                  v-model="value"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value} points"
-                />
-              </el-col>
-            </el-row> -->
-            <!-- <el-row class="details">
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">地址：</span>
-                  <span class="info-value">香港大屿山香港迪士尼乐园度假区</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">开放时间：</span>
-                  <span class="info-value">未开园；今日10:30-20:00开放</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">官方电话：</span>
-                  <span class="info-value">+852-35503388</span>
-                </div>
-              </el-col>
-            </el-row> -->
-            <!-- <el-divider border-style="dashed" /> -->
-          </el-col>
-          
-        </el-row>
+          <div>
+            <el-autocomplete
+              class="inline-input"
+              v-model="state1"
+              :fetch-suggestions="querySearch"
+              placeholder="请输入内容"
+              @select="handleSelect"
+              @focus="clearInput"
+              size="small"
+            ></el-autocomplete>
+            <p>{{ $t("message.hello") }}</p>
+          </div>
+          <div class="right-header">
+            <div class="userImage"></div>
+            <div class="nav-menu"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </template>
-    
-  
-  <script>
+</template>
+
+<script>
   import { ref } from "vue";
   import { ElCard, ElIcon } from "element-plus";
   import { HomeFilled, Search, User } from "@element-plus/icons-vue";
@@ -118,7 +47,6 @@
   // import { ElCard } from 'element-plus';
   import { ElButton, ElDrawer } from "element-plus";
   import Header from "@/components/header.vue";
-  import Content from "@/components/content.vue";
   // import MarkdownIt from 'markdown-it';
   // https://element-plus.org/zh-CN/component/icon
   export default {
@@ -131,8 +59,7 @@
       User,
       ElButton,
       ElDrawer,
-      Header,
-      Content
+      Header
     },
     setup() {
       // 控制抽屉显示
@@ -276,8 +203,8 @@
     },
   };
   </script>
-  
-    <style lang="less" scoped>
+
+<style lang="less" scoped>
   .slideshow {
     display: flex;
     padding-top: 20px;
@@ -673,4 +600,3 @@
     }
   }
   </style>
-    
