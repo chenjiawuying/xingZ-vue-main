@@ -60,7 +60,7 @@
               <el-col :span="24" class="div-div-div"></el-col>
               <el-col :span="24">
                 <div class="icon-text-container">
-                  <el-icon size="35" color="yellow">
+                  <el-icon size="35" color="#f18677">
                     <trophy-base />
                   </el-icon>
                   <span class="tit-meishi">广州特色美食排行</span>
@@ -72,19 +72,30 @@
             </el-row>
           </el-col>
           <el-col :span="17">
-            <el-carousel height="360px" class="glass-carousel">
-              <el-carousel-item v-for="(item, index) in images" :key="index">
-                <div class="image-wrapper">
-                  <img
-                    :src="item"
-                    alt="carousel image"
-                    class="carousel-image"
-                  />
-                </div>
-              </el-carousel-item>
-            </el-carousel>
-            1111这是一段介绍
-            1111这是一段介绍1111这是一段介绍1111这是一段介绍
+            <div>
+              <el-carousel
+  height="360px"
+  class="glass-carousel"
+  v-model="activeIndex"
+  @change="handleCarouselChange"
+>
+  <el-carousel-item v-for="(item, index) in images" :key="index">
+    <div class="image-wrapper">
+      <img
+        :src="item.src"
+        alt="carousel image"
+        class="carousel-image"
+      />
+    </div>
+  </el-carousel-item>
+</el-carousel>
+
+<!-- 在轮播图下方显示描述文本 -->
+<div class="carousel-description">
+  <p>{{ images[activeIndex].description }}</p>
+</div>
+
+            </div>
             <div class="banner-food">
               <el-icon size="25" color="#FF6347" class="icon">
                 <Food />
@@ -93,15 +104,6 @@
             </div>
 
             <!-- 搜索框 -->
-            <div class="search-container" style="margin-bottom: 20px;">
-              <el-input
-                v-model="searchQuery"
-                placeholder="请输入美食名称进行搜索"
-                prefix-icon="el-icon-search"
-                clearable
-                @input="handleSearch"
-              />
-            </div>
 
             <div class="rankingList">
               <div class="filter-container">
@@ -182,6 +184,15 @@
                   </el-select>
                 </div>
 
+                <div class="search-container">
+                  <el-input
+                    v-model="searchQuery"
+                    placeholder="请输入美食名称进行搜索"
+                    prefix-icon="el-icon-search"
+                    clearable
+                    @input="handleSearch"
+                  />
+                </div>
                 <!-- 餐馆列表展示 -->
                 <div class="restaurant-list">
                   <div
@@ -216,7 +227,9 @@
                           </span>
                         </div>
                         <div class="latest-review">
-                          <span class="reviewer">{{ restaurant.reviewer }}</span>
+                          <span class="reviewer">{{
+                            restaurant.reviewer
+                          }}</span>
                           的最新点评：
                           <blockquote>{{ restaurant.latestReview }}</blockquote>
                         </div>
@@ -290,6 +303,31 @@ export default {
     TrophyBase,
   },
   setup() {
+    const images = ref([
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description: "老广州味道，广州茶楼拾忆 现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆...",
+      },
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description: "这是图片 2 的介绍",
+      },
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description: "这是图片 3 的介绍",
+      },
+    ]);
+
+    // 当前活动的轮播索引
+    const activeIndex = ref(0);
+
+    // 处理轮播变化的事件
+    const handleCarouselChange = (index) => {
+  activeIndex.value = index;
+};
+
+
+
     const state1 = ref("");
 
     const querySearch = (queryString, cb) => {
@@ -479,12 +517,9 @@ export default {
       paginatedRestaurants,
       handlePageChange,
       handleSizeChange,
-      images: [
-        require("../assets/食物1.jpg"), // 替换为你的图片 URL
-        require("../assets/食物1.jpg"), // 替换为你的图片 URL
-        require("../assets/食物1.jpg"), // 替换为你的图片 URL
-        require("../assets/食物1.jpg"), // 替换为你的图片 URL
-      ],
+      images, // 图片列表
+      activeIndex, // 当前轮播索引
+      handleCarouselChange, // 处理轮播变化
       dishes: [
         {
           name: "汤",
@@ -561,7 +596,12 @@ export default {
 
 <style lang="less" scoped>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
-
+.carousel-description {
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  margin-top: 10px; /* 添加一些间距使其与轮播图分开 */
+}
 .body {
   font-family: "Roboto", sans-serif;
   // background-color: #f9f6f6; // 全局背景色
@@ -580,7 +620,7 @@ export default {
   .wrap {
     .rankingList {
       border-radius: 8px;
-      
+
       box-shadow: 12px 12px 2px 1px #a6b2c745;
       border: 1px solid #a39d9d;
       background-color: white; // 全局背景色
@@ -588,7 +628,7 @@ export default {
 
       .filter-container {
         // background-color: rgba(151, 243, 109, 0.774);
-        
+
         padding: 10px 20px;
 
         .filter-group {
@@ -711,6 +751,7 @@ export default {
       justify-content: flex-start; /* 控制内容位置 */
     }
     .icon-text-container {
+      margin-block-end: 10px;
       display: flex;
       align-items: center; /* 垂直居中 */
       span {
@@ -864,7 +905,6 @@ a {
     }
   }
 }
-
 
 .kong {
   padding-top: 20px;
@@ -1055,7 +1095,7 @@ a {
   font-weight: bold; /* 可选：加粗字体 */
 }
 .glass-carousel {
-
+  position: relative;
   // width: 750px;
   border-radius: 6px; /* 圆角 */
   overflow: hidden;
@@ -1074,6 +1114,7 @@ a {
 }
 
 .image-wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
   position: relative;
@@ -1081,10 +1122,27 @@ a {
 }
 
 .carousel-image {
+  object-fit: cover;
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease, filter 0.3s ease; /* 图片的动画效果 */
+}
+
+.carousel-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 8px;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+}
+
+.el-carousel-item.is-active .carousel-text {
+  opacity: 1;
 }
 
 .carousel-image:hover {
@@ -1093,6 +1151,7 @@ a {
 }
 
 .banner-food {
+  margin-block-end: 10px;
   padding-left: 20px;
   display: flex;
   align-items: center;
