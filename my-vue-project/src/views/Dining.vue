@@ -74,27 +74,27 @@
           <el-col :span="17">
             <div>
               <el-carousel
-  height="360px"
-  class="glass-carousel"
-  v-model="activeIndex"
-  @change="handleCarouselChange"
->
-  <el-carousel-item v-for="(item, index) in images" :key="index">
-    <div class="image-wrapper">
-      <img
-        :src="item.src"
-        alt="carousel image"
-        class="carousel-image"
-      />
-    </div>
-  </el-carousel-item>
-</el-carousel>
+    height="360px"
+    class="glass-carousel"
+    v-model="activeIndex"
+    @change="handleCarouselChange"
+  >
+    <el-carousel-item v-for="(item, index) in images" :key="index">
+      <div class="image-wrapper">
+        <img
+          :src="item.src"
+          alt="carousel image"
+          class="carousel-image"
+        />
+      </div>
+    </el-carousel-item>
+  </el-carousel>
 
-<!-- 在轮播图下方显示描述文本 -->
-<div class="carousel-description">
-  <p>{{ images[activeIndex].description }}</p>
-</div>
-
+  <!-- 在轮播图下方显示描述文本 -->
+  <div class="carousel-description">
+    <p class="description1">{{ images[activeIndex].description1 }}</p>
+    <p class="description2">{{ images[activeIndex].description2 }}</p>
+  </div>
             </div>
             <div class="banner-food">
               <el-icon size="25" color="#FF6347" class="icon">
@@ -304,29 +304,31 @@ export default {
   },
   setup() {
     const images = ref([
-      {
-        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-        description: "老广州味道，广州茶楼拾忆 现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆...",
-      },
-      {
-        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-        description: "这是图片 2 的介绍",
-      },
-      {
-        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-        description: "这是图片 3 的介绍",
-      },
-    ]);
+  {
+    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+    description1: "老广州味道，广州茶楼拾忆",
+    description2: "现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆..."
+  },
+  {
+    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+    description1: "这是图片 2 的第一段介绍",
+    description2: "这是图片 2 的第二段详细介绍。"
+  },
+  {
+    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+    description1: "这是图片 3 的第一段介绍",
+    description2: "这是图片 3 的第二段详细介绍。"
+  }
+]);
+
 
     // 当前活动的轮播索引
     const activeIndex = ref(0);
 
     // 处理轮播变化的事件
     const handleCarouselChange = (index) => {
-  activeIndex.value = index;
-};
-
-
+      activeIndex.value = index;
+    };
 
     const state1 = ref("");
 
@@ -362,9 +364,12 @@ export default {
       "不限",
       "大众都爱吃",
       "不吃不等于没来过",
-      "早茶",
-      "广式甜品",
+      "早茶·粤菜",
       "当地人最爱",
+      "广式甜甜甜品",
+      "广州之味的根源-西关小吃",
+      "把美味带回家",
+      "这些你敢吃吗🐍🐍",
     ]);
     const selectedFeatures = ref([]);
     const checkAllFeatures = ref(false);
@@ -388,11 +393,34 @@ export default {
       "不限",
       "快餐",
       "川菜",
-      "火锅",
-      "西餐",
-      "日料",
+      "比萨",
+      "连锁/加盟",
+      "酒吧",
+      "贵州菜",
+      "主题",
+      "徽菜",
+      "山西菜",
+      "广州菜",
+      "下午茶",
+      "豫菜",
+      "潮汕菜",
+      "夜市",
+      "俄罗斯菜",
+      "西班牙菜",
+      "特色",
+      "湘菜",
+      "江浙菜",
+      "云南菜",
       "粤菜",
-      "甜品",
+      "新疆菜",
+      "港式",
+      "西餐",
+      "日本料理",
+      "韩国料理",
+      "东南亚美食",
+      "海鲜",
+      "火锅",
+      "小吃",
     ]);
     const selectedCategories = ref([]);
     const checkAllCategories = ref(false);
@@ -415,11 +443,34 @@ export default {
     const selectedBusinessArea = ref("不限");
     const businessAreas = ref([
       "不限",
-      "北京路",
-      "天河",
-      "越秀",
-      "海珠",
-      "荔湾",
+      "北京路/海珠广场",
+      "广州东站/五山",
+      "珠江新城/五羊新城",
+      "火车站/越秀公园附近",
+      "南沙万达广场/天后宫商圈",
+      "广州大学城附近",
+      "淘金/环市东/广州动物园",
+      "新塘商业中心区",
+      "从化区中心",
+      "芳村花地湾",
+      "中新广州知识城",
+      "白水寨风景名胜区",
+      "增城万达广场/东汇城",
+      "天河体育中心/岗顶",
+      "大沙地商圈",
+      "萝岗科学城/宝能演艺中心",
+      "江南西/国际轻纺城/珠江南附近",
+      "花都融创文旅城周边",
+      "琶洲会展/广州塔/客村",
+      "从化温泉风景区",
+      "长隆/广州南站",
+      "白云山风景区",
+      "白云同和/龙洞地区",
+      "番禺市桥/亚运城",
+      "新白云国际机场附近",
+      "天河公园/东圃商圈",
+      "沙面岛/上下九步行街",
+      "白云黄石/同德围地区",
     ]);
 
     const restaurants = ref([
@@ -600,7 +651,19 @@ export default {
   text-align: center;
   font-size: 16px;
   color: #333;
+  text-align: left; /* 左对齐 */
   margin-top: 10px; /* 添加一些间距使其与轮播图分开 */
+}
+
+.description1 {
+  font-size: 18px; /* 第一段字体较大 */
+  color: rgba(0, 0, 0, 0.8); /* 颜色稍深 */
+}
+
+.description2 {
+  font-size: 14px; /* 第二段字体较小 */
+  color: rgba(0, 0, 0, 0.6); /* 颜色稍浅 */
+  margin-top: 5px; /* 第二段与第一段之间的间距 */
 }
 .body {
   font-family: "Roboto", sans-serif;
