@@ -56,7 +56,7 @@ GET /api/v1/dishes/rank?city=广州&limit=10
 **请求参数**:
 
 - `city` (string, 必填): 城市名称，例如 `"广州"`。
-- `limit` (int, 可选): 返回的商家数量，默认为 10。最大值为 50。
+- `limit` (int, 可选): 返回的商家数量，默认为 200。最大值为 1000。
 - `area` (string, 可选): 商圈筛选（例如“北京路”、“珠江新城”）。
 
 **请求示例**:
@@ -296,4 +296,53 @@ GET /api/v1/filter-options?city=广州&type=business-areas
 
 ---
 
-通过这种设计，所有API的请求和响应都更加具体，方便前端开发时的数据处理和展示。
+关于轮播图的API设计，可以参考以下格式：
+
+---
+
+### 6. 获取轮播图内容
+
+**请求地址**: `/api/v1/carousel`
+
+**请求方法**: `GET`
+
+**请求参数**:
+
+- `city` (string, 必填): 城市名称，例如 `"广州"`。
+- `limit` (int, 可选): 返回的轮播图数量，默认为 3，最大值为 10。
+
+**请求示例**:
+
+```bash
+GET /api/v1/carousel?city=广州&limit=3
+```
+
+**响应参数**:
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "src": "https://example.com/images/food1.jpg",
+      "description1": "老广州味道，广州茶楼拾忆",
+      "description2": "现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆是..."
+    },
+    {
+      "src": "https://example.com/images/food2.jpg",
+      "description1": "这是图片 2 的第一段介绍",
+      "description2": "这是图片 2 的第二段详细介绍。"
+    },
+    {
+      "src": "https://example.com/images/food3.jpg",
+      "description1": "这是图片 3 的第一段介绍",
+      "description2": "这是图片 3 的第二段详细介绍。"
+    }
+  ],
+  "total": 3
+}
+```
+
+---
+
+这个API会返回城市的轮播图内容，`src` 是图片的URL，`description1` 和 `description2` 则是图片的描述信息。
