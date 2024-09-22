@@ -1,23 +1,119 @@
 <template>
   <div>
      <Header></Header>
-    
-    <Content></Content>
+     <div class="item-name">  
+      <div class="wrap">  
+        <div class="img-item-name"></div>  
+        <a href="">{{ spot.title }}</a>  
+      </div>  
+    </div>  
+    <div class="slideshow">  
+      <div class="wrap">  
+        <el-carousel class="rounded-carousel" height="400px" motion-blur>  
+          <el-carousel-item v-for="(image, index) in spot.images" :key="index">  
+            <img  
+              :src="image"  
+              alt="Carousel Image"  
+              style="width: 100%; height: 100%; object-fit: cover"  
+              class="rounded-carousel-item"  
+            />  
+          </el-carousel-item>  
+        </el-carousel>  
+      </div> 
+      <div class="warp2">
+      <el-row class="item-1">
+        <el-col :span="18" :offset="2" class="info-section">
+          <!-- <el-divider content-position="left">景观简介</el-divider> -->
+          <el-row>
+            <el-col :span="24" class="tit">
+              土耳其穆拉(Muğla)费特希耶的猫
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-rate
+                v-model="value"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value} points"
+              />
+            </el-col>
+          </el-row>
+          <el-row class="details">
+            <el-col :span="24">
+              <div class="info-item">
+                <span class="info-label">别名：</span>
+                <span class="info-value">{{ spot.alias }}</span>
+              </div>
+            </el-col>
+            <el-col :span="24">
+              <div class="info-item">
+                <span class="info-label">地址：</span>
+                <span class="info-value">{{ spot.address }}</span>
+              </div>
+            </el-col>
+            <el-col :span="24">
+              <div class="info-item">
+                <span class="info-label">开放时间：</span>
+                <span class="info-value">{{ spot.opening_hours }}</span>
+              </div>
+            </el-col>
+            <el-col :span="24">
+              <div class="info-item">
+                <span class="info-label">官方电话：</span>
+                <span class="info-value">{{ spot.contact }}</span>
+              </div>
+            </el-col>
+            <el-col :span="24">
+              <div class="info-item">
+                <span class="info-label">提示信息：</span>
+                <span class="info-value">{{ spot.tips }}</span>
+              </div>
+            </el-col>
+          </el-row>
+          <el-divider border-style="dashed" />
+          <div class="tab-items">
+            <div class="flex flex-wrap gap-1">
+              <el-card class="custom-card" shadow="hover">
+                <div class="card-content">
+                  <el-icon>
+                    <HomeFilled />
+                  </el-icon>
+                  <span>Always</span>
+                </div>
+              </el-card>
+              <el-card class="custom-card" shadow="hover">
+                <div class="card-content">
+                  <el-icon>
+                    <Search />
+                  </el-icon>
+                  <span>Hover</span>
+                </div>
+              </el-card>
+              <el-card class="custom-card" shadow="hover">
+                <div class="card-content">
+                  <el-icon>
+                    <User />
+                  </el-icon>
+                  <span>Never</span>
+                </div>
+              </el-card>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    </div>  
     <div class="content">
       <div class="warp">
         <el-row class="item-2">
           <el-col :span="12" class="info-section-tit"></el-col>
-          <el-col :span="9" :offset="3" class="info-section-tit"
-            >玄策妙笔</el-col
-          >
+          <el-col :span="9" :offset="3" class="info-section-tit">玄策妙笔</el-col>
         </el-row>
         <el-row class="item-3">
-          <el-col :span="12" class="info-section-content"
-            ></el-col
-          >
-          <el-col :span="9" :offset="3" class="info-section-content"
-            >AI攻略，祝你一路畅游</el-col
-          >
+          <el-col :span="12" class="info-section-content"></el-col>
+          <el-col :span="9" :offset="3" class="info-section-content">AI攻略，祝你一路畅游</el-col>
         </el-row>
         <el-row class="item-1">
           <el-col :span="12"> 111</el-col>
@@ -27,15 +123,10 @@
               <el-col :span="24" :offset="0"   class="tit">
                 <div class="container">
                   <!-- 按钮控制抽屉打开 -->
-                  <el-button color="#0582ff" plain :dark="isDark"  type="primary" @click="openDrawer('brief')"
-                    >打开简略内容</el-button
-                  >
-                  <el-button color="#0582ff"   :dark="isDark" 
-                    type="success"
-                    style="margin-left: 16px"
-                    @click="openDrawer('detailed')"
-                    >打开详细内容</el-button
-                  >
+                  <el-button color="#0582ff" plain :dark="isDark"  type="primary" @click="openDrawer('brief')">
+                    打开简略内容</el-button>
+                  <el-button color="#0582ff" :dark="isDark" type="success" style="margin-left: 16px" @click="openDrawer('detailed')">
+                    打开详细内容</el-button>
   
                   <!-- 简略内容抽屉 -->
                   <el-drawer
@@ -67,38 +158,6 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- <el-row>
-              <el-col :span="24">
-                <el-rate
-                  v-model="value"
-                  disabled
-                  show-score
-                  text-color="#ff9900"
-                  score-template="{value} points"
-                />
-              </el-col>
-            </el-row> -->
-            <!-- <el-row class="details">
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">地址：</span>
-                  <span class="info-value">香港大屿山香港迪士尼乐园度假区</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">开放时间：</span>
-                  <span class="info-value">未开园；今日10:30-20:00开放</span>
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="info-item">
-                  <span class="info-label">官方电话：</span>
-                  <span class="info-value">+852-35503388</span>
-                </div>
-              </el-col>
-            </el-row> -->
-            <!-- <el-divider border-style="dashed" /> -->
           </el-col>
           
         </el-row>
@@ -118,7 +177,8 @@
   // import { ElCard } from 'element-plus';
   import { ElButton, ElDrawer } from "element-plus";
   import Header from "@/components/header.vue";
-  import Content from "@/components/content.vue";
+  import axios from "axios";
+  // import Content from "@/components/content.vue";
   // import MarkdownIt from 'markdown-it';
   // https://element-plus.org/zh-CN/component/icon
   export default {
@@ -132,148 +192,194 @@
       ElButton,
       ElDrawer,
       Header,
-      Content
     },
-    setup() {
-      // 控制抽屉显示
-      const showBriefDrawer = ref(false);
-      const showDetailedDrawer = ref(false);
+    data() {  
+    return {
+      showBriefDrawer: false,  
+      showDetailedDrawer: false,  
+      renderedBriefContent: '',  
+      renderedDetailedContent: '',    
+      spot: {  
+        title: '',  
+        images: [],  
+        alias: '',  
+        address: '',  
+        opening_hours: '',  
+        contact: '',  
+        tips: ''  
+      }  
+    };  
+  },  
+  created() {  
+    this.fetchSpotData();  
+  },  
+  methods: {  
+    async fetchSpotData() {  
+      try {  
+        const response = await axios.get('http://api.doc.jiyou-tech.com/mock/27367/api/v1/attractions/{id}');  
+        this.spot = response.data;  
+        this.renderedBriefContent = this.renderMarkdown(this.spot.briefContent);  
+        this.renderedDetailedContent = this.renderMarkdown(this.spot.detailedContent);  
+      } catch (error) {  
+        console.error('Failed to fetch spot data:', error);  
+      }  
+    }  
+  },
+  renderMarkdown(markdownText){
+    return marked(markdownText);
+  },
+  openDrawer(type) {  
+    if(type === 'brief'){
+      this.showBriefDrawer = true;  
+    }else{
+      this.showDetailedDrawer = true;  
+    }
+  },
+  handleClose(done){
+    this.showBriefDrawer = false;  
+    this.showDetailedDrawer = false;  
+    done();  
+  },
+  //   setup() {
+  //     // 控制抽屉显示
+  //     const showBriefDrawer = ref(false);
+  //     const showDetailedDrawer = ref(false);
   
-      // 简略内容
-      const briefContent = ref(`**广州动物园游玩攻略**
+  //     // 简略内容
+  //     const briefContent = ref(`**广州动物园游玩攻略**
   
-  **基本信息**
-  - 地址：越秀区先烈中路120号
-  - 营业时间：8:00 - 18:00
-  - 门票：
-    - 成人：20元
-    - 儿童/学生：10元
-    - 60岁以上老人和1.2米以下儿童免费
+  // **基本信息**
+  // - 地址：越秀区先烈中路120号
+  // - 营业时间：8:00 - 18:00
+  // - 门票：
+  //   - 成人：20元
+  //   - 儿童/学生：10元
+  //   - 60岁以上老人和1.2米以下儿童免费
   
-  **交通指南**
-  - **南门：** 地铁5号线动物园站B/C出口
-  - **北门：** 地铁6号线黄花岗站A出口
-  - **自驾：** 南北门车位少，易堵车，建议公共交通
+  // **交通指南**
+  // - **南门：** 地铁5号线动物园站B/C出口
+  // - **北门：** 地铁6号线黄花岗站A出口
+  // - **自驾：** 南北门车位少，易堵车，建议公共交通
   
-  **推荐游玩路线**
-  - **北门进，南门出：** 依次参观猴子、黑猩猩、老虎、河马、飞禽馆、大象、熊猫、长颈鹿、斑马等，沿途下坡轻松不走回头路。
+  // **推荐游玩路线**
+  // - **北门进，南门出：** 依次参观猴子、黑猩猩、老虎、河马、飞禽馆、大象、熊猫、长颈鹿、斑马等，沿途下坡轻松不走回头路。
   
-  **必看推荐**
-  - **熊猫馆**：建议早点去，避免排队
-  - **飞禽大观**：孔雀常开屏
-  - **长颈鹿**：可近距离投喂（20元/把草料）
+  // **必看推荐**
+  // - **熊猫馆**：建议早点去，避免排队
+  // - **飞禽大观**：孔雀常开屏
+  // - **长颈鹿**：可近距离投喂（20元/把草料）
   
-  **小贴士**
-  - 带推车方便带娃
-  - 自带食物和水，园内餐饮较贵
-  - 做好防晒，游玩时间约3小时以上
-  - 选择工作日或早点入园避开人流高峰
+  // **小贴士**
+  // - 带推车方便带娃
+  // - 自带食物和水，园内餐饮较贵
+  // - 做好防晒，游玩时间约3小时以上
+  // - 选择工作日或早点入园避开人流高峰
   
-  祝大家玩得开心！`);
+  // 祝大家玩得开心！`);
   
-      // 详细内容
-      const detailedContent =
-        ref(`**广州动物园保姆级游玩攻略：不走回头路，20元畅玩！**
+  //     // 详细内容
+  //     const detailedContent =
+  //       ref(`**广州动物园保姆级游玩攻略：不走回头路，20元畅玩！**
   
-  **广州动物园简介**
-  - 地址：越秀区先烈中路120号
-  - 营业时间：8:00 - 18:00
-  - 门票：
-    - 成人：20元
-    - 儿童/学生：10元
-    - 60岁以上老人和1.2米以下儿童免费
-    - 购票方式：线上（公众号）、现场扫码、窗口购票
+  // **广州动物园简介**
+  // - 地址：越秀区先烈中路120号
+  // - 营业时间：8:00 - 18:00
+  // - 门票：
+  //   - 成人：20元
+  //   - 儿童/学生：10元
+  //   - 60岁以上老人和1.2米以下儿童免费
+  //   - 购票方式：线上（公众号）、现场扫码、窗口购票
   
-  **交通指南**
-  - **南门：** 地铁5号线动物园站B/C出口（近城堡花园，游乐场）
-  - **北门：** 地铁6号线黄花岗站A出口（近大猩猩，猴子）
-  - **公交：** 南北公交不同，请留意站点。
-  - **自驾：** 南北门均易堵车且车位有限，建议公共交通出行。
+  // **交通指南**
+  // - **南门：** 地铁5号线动物园站B/C出口（近城堡花园，游乐场）
+  // - **北门：** 地铁6号线黄花岗站A出口（近大猩猩，猴子）
+  // - **公交：** 南北公交不同，请留意站点。
+  // - **自驾：** 南北门均易堵车且车位有限，建议公共交通出行。
   
-  **推荐游玩路线：北门进，南门出（全程不走回头路）**
-  1. **北门入园**
-  2. 猴子🐵 - 黑猩猩🦍 - 熊🐻 - 豹子🐆
-  3. 老虎🐯 - 河马🦛 - 锦鲤苑🐟 - 飞禽大观🐦🦚🦜
-  4. 大象🐘 - 熊猫馆🐼 - 长颈鹿🦒 - 斑马🦓
-  5. 犀牛🦏 - 袋鼠🦘 - 羊驼🦙 - 游乐场🎠
-  6. 火烈鸟 - 天鹅🦢 - 南门出
+  // **推荐游玩路线：北门进，南门出（全程不走回头路）**
+  // 1. **北门入园**
+  // 2. 猴子🐵 - 黑猩猩🦍 - 熊🐻 - 豹子🐆
+  // 3. 老虎🐯 - 河马🦛 - 锦鲤苑🐟 - 飞禽大观🐦🦚🦜
+  // 4. 大象🐘 - 熊猫馆🐼 - 长颈鹿🦒 - 斑马🦓
+  // 5. 犀牛🦏 - 袋鼠🦘 - 羊驼🦙 - 游乐场🎠
+  // 6. 火烈鸟 - 天鹅🦢 - 南门出
   
-  **游玩推荐重点：**
-  - **熊猫馆🐼：** 位于园区中部，建议早点前往以避开排队高峰并占据有利位置观赏“星一”和“雅一”。
-  - **大象馆🐘：** 可以近距离观赏大象，孩子们的最爱之一。
-  - **虎山🐯：** 猎豹和老虎常常不太活跃，可能需要耐心等待。
-  - **飞禽大观🦚🐦：** 内有活跃的孔雀，常开屏供观赏。
-  - **狮子馆🦁：** 齐刘海发型的狮子“阿杭”常与狮后“贴贴”休息，需靠运气看到它们的活动。
-  - **长颈鹿🦒：** 可购买草料（20元/把）进行近距离投喂，非常适合亲子互动。
+  // **游玩推荐重点：**
+  // - **熊猫馆🐼：** 位于园区中部，建议早点前往以避开排队高峰并占据有利位置观赏“星一”和“雅一”。
+  // - **大象馆🐘：** 可以近距离观赏大象，孩子们的最爱之一。
+  // - **虎山🐯：** 猎豹和老虎常常不太活跃，可能需要耐心等待。
+  // - **飞禽大观🦚🐦：** 内有活跃的孔雀，常开屏供观赏。
+  // - **狮子馆🦁：** 齐刘海发型的狮子“阿杭”常与狮后“贴贴”休息，需靠运气看到它们的活动。
+  // - **长颈鹿🦒：** 可购买草料（20元/把）进行近距离投喂，非常适合亲子互动。
   
-  **游玩Tips：**
-  1. **园区较大，建议带推车：** 特别是带小朋友的家庭，推车可以减轻体力消耗。
-  2. **自带食物和水：** 园内餐饮价格较高且味道一般，自带干粮和水更为划算。
-  3. **做好防晒：** 游玩时间预计3小时以上，请携带防晒用品。
-  4. **建议错峰游玩：** 尽量选择工作日或早上8:00 - 9:00入园，避开高峰人流。
+  // **游玩Tips：**
+  // 1. **园区较大，建议带推车：** 特别是带小朋友的家庭，推车可以减轻体力消耗。
+  // 2. **自带食物和水：** 园内餐饮价格较高且味道一般，自带干粮和水更为划算。
+  // 3. **做好防晒：** 游玩时间预计3小时以上，请携带防晒用品。
+  // 4. **建议错峰游玩：** 尽量选择工作日或早上8:00 - 9:00入园，避开高峰人流。
   
-  **其他小贴士：**
-  - **注意防蚊：** 园区内蚊虫较多，建议使用防蚊液。
-  - **观察力必不可少：** 有些动物会藏在角落里，细心观察能带来更多惊喜。
-  - **文明观赏：** 大部分动物是从马戏团解救出来的，请大家尊重它们的生活空间，不做打扰。
+  // **其他小贴士：**
+  // - **注意防蚊：** 园区内蚊虫较多，建议使用防蚊液。
+  // - **观察力必不可少：** 有些动物会藏在角落里，细心观察能带来更多惊喜。
+  // - **文明观赏：** 大部分动物是从马戏团解救出来的，请大家尊重它们的生活空间，不做打扰。
   
-  **总结：**
-  广州动物园是一个充满乐趣的亲子游好去处，从北门进南门出轻松不走回头路，可以一次性看到各种可爱的动物们。希望大家在游玩过程中，遵守园区规则，尊重动物的生活习性，祝大家游园愉快！`);
+  // **总结：**
+  // 广州动物园是一个充满乐趣的亲子游好去处，从北门进南门出轻松不走回头路，可以一次性看到各种可爱的动物们。希望大家在游玩过程中，遵守园区规则，尊重动物的生活习性，祝大家游园愉快！`);
   
-      // Markdown 渲染
-      const md = new MarkdownIt();
-      const renderedBriefContent = computed(() => md.render(briefContent.value));
-      const renderedDetailedContent = computed(() =>
-        md.render(detailedContent.value)
-      );
+  //     // Markdown 渲染
+  //     const md = new MarkdownIt();
+  //     const renderedBriefContent = computed(() => md.render(briefContent.value));
+  //     const renderedDetailedContent = computed(() =>
+  //       md.render(detailedContent.value)
+  //     );
   
-      // 打开抽屉
-      const openDrawer = (type) => {
-        if (type === "brief") {
-          showBriefDrawer.value = true;
-        } else if (type === "detailed") {
-          showDetailedDrawer.value = true;
-        }
-      };
+  //     // 打开抽屉
+  //     const openDrawer = (type) => {
+  //       if (type === "brief") {
+  //         showBriefDrawer.value = true;
+  //       } else if (type === "detailed") {
+  //         showDetailedDrawer.value = true;
+  //       }
+  //     };
   
-      // 关闭前确认
-      const handleClose = (done) => {
-        ElMessageBox.confirm("确定要关闭吗？")
-          .then(() => {
-            done();
-          })
-          .catch(() => {
-            // 处理取消操作
-          });
-      };
+  //     // 关闭前确认
+  //     const handleClose = (done) => {
+  //       ElMessageBox.confirm("确定要关闭吗？")
+  //         .then(() => {
+  //           done();
+  //         })
+  //         .catch(() => {
+  //           // 处理取消操作
+  //         });
+  //     };
   
-      // 使用 ref 来创建响应式数据
-      const value = ref(3.7);
-      const images = ref([
-        "https://cdn.pixabay.com/photo/2023/06/29/12/28/cats-8096304_960_720.jpg",
-        "https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg",
-        "https://cdn.pixabay.com/photo/2024/05/18/08/16/tomcat-8769861_640.jpg",
-        "https://cdn.pixabay.com/photo/2017/04/30/18/33/kittens-2273598_640.jpg",
-        "https://cdn.pixabay.com/photo/2015/06/07/19/42/animal-800760_640.jpg",
-        "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_1280.jpg",
-      ]);
+  //     // 使用 ref 来创建响应式数据
+  //     const value = ref(3.7);
+  //     const images = ref([
+  //       "https://cdn.pixabay.com/photo/2023/06/29/12/28/cats-8096304_960_720.jpg",
+  //       "https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg",
+  //       "https://cdn.pixabay.com/photo/2024/05/18/08/16/tomcat-8769861_640.jpg",
+  //       "https://cdn.pixabay.com/photo/2017/04/30/18/33/kittens-2273598_640.jpg",
+  //       "https://cdn.pixabay.com/photo/2015/06/07/19/42/animal-800760_640.jpg",
+  //       "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_1280.jpg",
+  //     ]);
   
-      // 返回需要在模板中使用的响应式数据
-      return {
-        value,
-        images,
-        HomeFilled,
-        Search,
-        User,
+  //     // 返回需要在模板中使用的响应式数据
+  //     return {
+  //       value,
+  //       images,
+  //       HomeFilled,
+  //       Search,
+  //       User,
   
-        showBriefDrawer,
-        showDetailedDrawer,
-        renderedBriefContent,
-        renderedDetailedContent,
-        openDrawer,
-        handleClose,
-      };
-    },
+  //       showBriefDrawer,
+  //       showDetailedDrawer,
+  //       renderedBriefContent,
+  //       renderedDetailedContent,
+  //       openDrawer,
+  //       handleClose,
+  //     };
+  //   },
   };
   </script>
   

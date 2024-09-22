@@ -11,6 +11,7 @@ import My from '../views/My.vue'
 import indexBanner from '../views/index-Banner.vue'
 import SightSpot from '../views/SightSpot.vue'
 import Dining from '../views/Dining.vue'
+import SightSpotRun from '../views/SightSpotRun.vue'
 
 const routes = [{
     path: '/',
@@ -57,6 +58,11 @@ const routes = [{
     path: '/indexBanner',
     name: 'indexBanner',
     component: indexBanner
+  },
+   {
+    path: '/SightSpotRun',
+    name: 'SightSpotRun',
+    component: SightSpotRun
   }
 ]
 
