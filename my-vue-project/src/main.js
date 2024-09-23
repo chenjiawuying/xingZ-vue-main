@@ -8,7 +8,7 @@ import { createI18n } from 'vue-i18n';
 import $ from 'jquery'
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
-
+import axios from 'axios'
 
 // 定义测试用的语言内容
 const messages = {
@@ -32,4 +32,4 @@ const i18n = createI18n({
   });
   
 // import 'bootstrap/dist/js/bootstrap.min.js'
-createApp(App).use(store).use(router).use(i18n).use(ElementPlus).mount('#app')
+createApp(App).use(store).use(router).use(axios).use(i18n).use(ElementPlus).mount('#app')

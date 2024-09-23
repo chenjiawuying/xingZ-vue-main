@@ -67,7 +67,7 @@
                   <el-icon size="35" color="#f18677">
                     <trophy-base />
                   </el-icon>
-                  <span class="tit-meishi">广州特色美食排行</span>
+                  <span class="tit-meishi">{{ city }}特色美食排行</span>
                 </div>
               </el-col>
               <el-col :span="24" class="container2">
@@ -75,6 +75,7 @@
               </el-col>
             </el-row>
           </el-col>
+
           <el-col :span="17">
             <div>
               <el-carousel
@@ -172,6 +173,16 @@
                     </el-checkbox>
                   </el-checkbox-group>
                 </div>
+                <!-- 餐厅详情弹窗 -->
+                <el-dialog
+                  v-if="restaurantDetails"
+                  title="餐厅详情"
+                  v-model:visible="dialogVisible"
+                >
+                  <div v-for="(value, key) in restaurantDetails" :key="key">
+                    <strong>{{ key }}:</strong> {{ value }}
+                  </div>
+                </el-dialog>
 
                 <!-- 筛选项 - 商圈 -->
                 <div class="filter-group">
@@ -207,6 +218,7 @@
                     class="list-item"
                     v-for="restaurant in paginatedRestaurants"
                     :key="restaurant.name"
+                    @click="fetchRestaurantDetails(restaurant.name)"
                   >
                     <div class="card-content">
                       <!-- 图片部分 -->
@@ -269,9 +281,13 @@
 </template>
 
 <script>
+const dialogVisible = ref(false);
 const city = ref("广州"); // 默认值可以根据实际需要设置
 const limit = ref(10); // 默认展示数量
 const dishes = ref([]); // 菜品数据
+
+// 在 setup 中定义一个状态来存储餐厅详情
+const restaurantDetails = ref(null);
 import { ref, onMounted, computed } from "vue";
 
 import axios from "axios";
@@ -455,6 +471,7 @@ export default {
         checkedCount > 0 && checkedCount < categories.value.length - 1;
     };
 
+    //商圈列表展示
     const selectedBusinessArea = ref("不限");
     const businessAreas = ref([
       "不限",
@@ -490,19 +507,19 @@ export default {
 
     const restaurants = ref([
       {
-        name: "九爷鸡(德政中路店)",
+        name: "北京路餐厅",
         rating: "No.1",
         latestReview:
           "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
         score: 5,
         reviews: 1551,
         type: "快餐",
-        area: "北京路",
+        area: "北京路/海珠广场",
         image: require("../assets/食物1.jpg"),
       },
       // ... (其他餐馆数据)
       {
-        name: "超记煲仔饭(珠光路店)",
+        name: "珠江新城餐厅",
         rating: "No.2",
         latestReview:
           "浑噩一生的最新点评：煲仔饭的米，一定是丝苗米，细长晶莹...",
@@ -554,11 +571,12 @@ export default {
       pageSize.value = size;
       currentPage.value = 1; // 重置到第一页
     };
+
     // 排行请求
     const fetchDishes = async () => {
       try {
         const response = await axios.get(
-          "http://api.doc.jiyou-tech.com/mock/30811/api/v1/dishes/rank",
+          "http://localhost:8085/api/v1/dishes/rank",
           {
             params: {
               city: city.value,
@@ -580,6 +598,38 @@ export default {
     onMounted(() => {
       fetchDishes();
     });
+
+    // 添加一个返回商家的方法
+    const fetchRestaurantDetails = async (restaurantName) => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8085/api/v1/restaurants",
+          {
+            params: {
+              city: city.value,
+              limit: limit.value,
+            },
+          }
+        );
+        // 假设返回的数据结构是一个数组
+        const restaurants = response.data.data; // 根据你的 API 返回的数据结构调整
+
+        // 查找匹配的餐厅
+        const matchedRestaurant = restaurants.find(
+          (restaurant) => restaurant.name === restaurantName
+        );
+
+        if (matchedRestaurant) {
+          console.log("找到的餐厅信息:", matchedRestaurant);
+          restaurantDetails.value = matchedRestaurant; // 更新餐厅详情
+          dialogVisible.value = true; // 显示弹窗
+        } else {
+          console.error("未找到匹配的餐厅:", restaurantName);
+        }
+      } catch (error) {
+        console.error("获取餐厅详细信息失败:", error);
+      }
+    };
 
     return {
       state1,
@@ -615,6 +665,8 @@ export default {
       city,
       limit,
       dishes,
+      restaurants,
+      fetchRestaurantDetails, // 添加这个方法
     };
   },
 };
