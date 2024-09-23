@@ -45,8 +45,12 @@
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{ path: '/' }">目的地</el-breadcrumb-item>
           <el-breadcrumb-item><a href="/">广东</a></el-breadcrumb-item>
-          <el-breadcrumb-item><a href="/">广州</a></el-breadcrumb-item>
-          <el-breadcrumb-item><a href="/">广州美食</a></el-breadcrumb-item>
+          <el-breadcrumb-item
+            ><a href="/">{{ city }}</a></el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            ><a href="/">{{ city }}美食</a></el-breadcrumb-item
+          >
         </el-breadcrumb>
       </div>
     </div>
@@ -74,27 +78,31 @@
           <el-col :span="17">
             <div>
               <el-carousel
-    height="360px"
-    class="glass-carousel"
-    v-model="activeIndex"
-    @change="handleCarouselChange"
-  >
-    <el-carousel-item v-for="(item, index) in images" :key="index">
-      <div class="image-wrapper">
-        <img
-          :src="item.src"
-          alt="carousel image"
-          class="carousel-image"
-        />
-      </div>
-    </el-carousel-item>
-  </el-carousel>
+                height="360px"
+                class="glass-carousel"
+                v-model="activeIndex"
+                @change="handleCarouselChange"
+              >
+                <el-carousel-item v-for="(item, index) in images" :key="index">
+                  <div class="image-wrapper">
+                    <img
+                      :src="item.src"
+                      alt="carousel image"
+                      class="carousel-image"
+                    />
+                  </div>
+                </el-carousel-item>
+              </el-carousel>
 
-  <!-- 在轮播图下方显示描述文本 -->
-  <div class="carousel-description">
-    <p class="description1">{{ images[activeIndex].description1 }}</p>
-    <p class="description2">{{ images[activeIndex].description2 }}</p>
-  </div>
+              <!-- 在轮播图下方显示描述文本 -->
+              <div class="carousel-description">
+                <p class="description1">
+                  {{ images[activeIndex].description1 }}
+                </p>
+                <p class="description2">
+                  {{ images[activeIndex].description2 }}
+                </p>
+              </div>
             </div>
             <div class="banner-food">
               <el-icon size="25" color="#FF6347" class="icon">
@@ -261,7 +269,14 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+const city = ref("广州"); // 默认值可以根据实际需要设置
+const limit = ref(10); // 默认展示数量
+const dishes = ref([]); // 菜品数据
+import { ref, onMounted, computed } from "vue";
+
+import axios from "axios";
+
+// import { ref, computed } from "vue";
 import {
   ElCard,
   ElIcon,
@@ -304,23 +319,23 @@ export default {
   },
   setup() {
     const images = ref([
-  {
-    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-    description1: "老广州味道，广州茶楼拾忆",
-    description2: "现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆..."
-  },
-  {
-    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-    description1: "这是图片 2 的第一段介绍",
-    description2: "这是图片 2 的第二段详细介绍。"
-  },
-  {
-    src: require("../assets/食物1.jpg"), // 替换为你的图片路径
-    description1: "这是图片 3 的第一段介绍",
-    description2: "这是图片 3 的第二段详细介绍。"
-  }
-]);
-
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description1: "老广州味道，广州茶楼拾忆",
+        description2:
+          "现在的广州仍有许多如陶陶居那样的老字号茶楼，也有如炳胜那样的新兴茶楼，茶楼在广州比比皆...",
+      },
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description1: "这是图片 2 的第一段介绍",
+        description2: "这是图片 2 的第二段详细介绍。",
+      },
+      {
+        src: require("../assets/食物1.jpg"), // 替换为你的图片路径
+        description1: "这是图片 3 的第一段介绍",
+        description2: "这是图片 3 的第二段详细介绍。",
+      },
+    ]);
 
     // 当前活动的轮播索引
     const activeIndex = ref(0);
@@ -539,6 +554,32 @@ export default {
       pageSize.value = size;
       currentPage.value = 1; // 重置到第一页
     };
+    // 排行请求
+    const fetchDishes = async () => {
+      try {
+        const response = await axios.get(
+          "http://api.doc.jiyou-tech.com/mock/30811/api/v1/dishes/rank",
+          {
+            params: {
+              city: city.value,
+              limit: limit.value,
+            },
+          }
+        );
+        const data = response.data.data;
+        if (Array.isArray(data)) {
+          dishes.value = data;
+        } else {
+          console.error("返回的数据不是一个数组:", data);
+        }
+      } catch (error) {
+        console.error("获取菜品数据失败:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchDishes();
+    });
 
     return {
       state1,
@@ -571,75 +612,9 @@ export default {
       images, // 图片列表
       activeIndex, // 当前轮播索引
       handleCarouselChange, // 处理轮播变化
-      dishes: [
-        {
-          name: "汤",
-          score: 466,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "汤",
-          score: 466,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "叉烧",
-          score: 216,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "烧鹅",
-          score: 112,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "叉烧包",
-          score: 87,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "猪手",
-          score: 73,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "牛河",
-          score: 53,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "煲仔饭",
-          score: 50,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "荷叶饭",
-          score: 2,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "冬瓜盅",
-          score: 2,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        {
-          name: "猪肚煲鸡",
-          score: 1,
-          imageUrl:
-            "https://img.jsdesign2.com/assets/img/6556e73f90ab84325baa606a.png#85d85dbadb9db0744eaa6c894d882c4d",
-        },
-        // 更多菜品数据...
-      ],
+      city,
+      limit,
+      dishes,
     };
   },
 };
@@ -968,9 +943,6 @@ a {
     }
   }
 }
-
-
-
 
 .kong {
   padding-top: 20px;
