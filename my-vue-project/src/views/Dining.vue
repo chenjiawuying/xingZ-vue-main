@@ -667,6 +667,8 @@ export default {
       dishes,
       restaurants,
       fetchRestaurantDetails, // 添加这个方法
+      restaurantDetails,
+      dialogVisible,
     };
   },
 };
