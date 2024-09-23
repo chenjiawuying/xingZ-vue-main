@@ -493,7 +493,7 @@ export default {
           "浑噩一生的最新点评：煲仔饭的米，一定是丝苗米，细长晶莹...",
         score: 4.4,
         reviews: 61,
-        type: "快餐",
+        type: "酒吧",
         area: "珠光路",
         image: require("../assets/食物1.jpg"),
       },
