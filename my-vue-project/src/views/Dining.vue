@@ -113,7 +113,7 @@
                 <el-icon size="25" color="#FF6347" class="icon">
                   <Food />
                 </el-icon>
-                <span class="banner-text">广州全部美食推荐</span>
+                <span class="banner-text">{{ city }}全部美食推荐</span>
               </div>
 
               <!-- 搜索框 -->
@@ -510,34 +510,59 @@ export default {
       "白云黄石/同德围地区",
     ]);
 
-    const restaurants = ref([
-      {
-        id: 101,
-        name: "北京路餐厅",
-        rating: "No.1",
-        latestReview:
-          "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
-        score: 5,
-        reviews: 1551,
-        type: "快餐",
-        area: "北京路/海珠广场",
-        image: require("../assets/食物1.jpg"),
-      },
-      // ... (其他餐馆数据)
-      {
-        id: 102,
-        name: "珠江新城餐厅",
-        rating: "No.2",
-        latestReview:
-          "浑噩一生的最新点评：煲仔饭的米，一定是丝苗米，细长晶莹...",
-        score: 4.4,
-        reviews: 61,
-        type: "快餐",
-        area: "珠光路",
-        image: require("../assets/食物1.jpg"),
-      },
-      // 更多餐馆数据...
-    ]);
+    const restaurants = ref([]);
+    const fetchrestaurants = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8085/api/v1/restaurants",
+          {
+            params: {
+              city: city.value,
+              limit: limit.value,
+            },
+          }
+        );
+        const data = response.data.data;
+        if (Array.isArray(data)) {
+          restaurants.value = data;
+        } else {
+          console.error("返回的数据不是一个数组:", data);
+        }
+      } catch (error) {
+        console.error("获取菜品数据失败:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchrestaurants();
+    });
+
+    // {
+    //   id: 101,
+    //   name: "北京路餐厅",
+    //   rating: "No.1",
+    //   latestReview:
+    //     "圆滚滚的胖达的最新点评：实惠又好吃，满满一大碗肉，我点的四宝...",
+    //   score: 5,
+    //   reviews: 1551,
+    //   type: "快餐",
+    //   area: "北京路/海珠广场",
+    //   image: require("../assets/食物1.jpg"),
+    // },
+    // // ... (其他餐馆数据)
+    // {
+    //   id: 102,
+    //   name: "珠江新城餐厅",
+    //   rating: "No.2",
+    //   latestReview:
+    //     "浑噩一生的最新点评：煲仔饭的米，一定是丝苗米，细长晶莹...",
+    //   score: 4.4,
+    //   reviews: 61,
+    //   type: "快餐",
+    //   area: "珠光路",
+    //   image: require("../assets/食物1.jpg"),
+    // },
+    // // 更多餐馆数据...
 
     const currentPage = ref(1);
     const pageSize = ref(10); // 每页展示的条目数
