@@ -13,7 +13,9 @@
             <span><a href="">目的地</a> </span>
             <span><a href="">旅游产品</a> </span>
             <span><a href="">关于我们</a> </span>
-            <span><a href="">更多内容</a> </span>
+            <router-link to="/Dining">
+              <span><a href="">更多内容</a> </span></router-link
+            >
           </div>
         </div>
 
@@ -93,7 +95,7 @@ export default {
   },
   mounted() {
     this.restaurants = this.loadAll();
-  }
+  },
 };
 </script>
 

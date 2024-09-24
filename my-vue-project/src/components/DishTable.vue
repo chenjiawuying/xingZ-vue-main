@@ -4,7 +4,7 @@
       stripe
       :data="tableData"
       :default-sort="{ prop: 'score', order: 'descending' }"
-      style="width: 215px; margin: auto;"
+      style="width: 215px; margin: auto"
     >
       <!-- 排名列 -->
       <el-table-column label="R" width="50" align="center">
@@ -25,6 +25,7 @@
             class="food-name"
             @mouseenter="showTooltip(scope.row, $event)"
             @mouseleave="hideTooltip"
+            @click="fetchDishDetail(scope.row.id)"
           >
             {{ scope.row.name }}
           </span>
@@ -46,9 +47,16 @@
     <div
       v-if="showCard"
       class="custom-card"
-      :style="{ top: tooltipPosition.top + 'px', left: tooltipPosition.left + 'px' }"
+      :style="{
+        top: tooltipPosition.top + 'px',
+        left: tooltipPosition.left + 'px',
+      }"
     >
-      <img :src="currentItem.imageUrl" :alt="currentItem.name" class="card-image" />
+      <img
+        :src="currentItem.imageUrl"
+        :alt="currentItem.name"
+        class="card-image"
+      />
       <div class="card-info">
         <h4>{{ currentItem.name }}</h4>
         <p>这是{{ currentItem.name }}的美味图片。</p>
@@ -58,8 +66,9 @@
 </template>
 
 <script>
-import { ArrowUp } from '@element-plus/icons-vue';
-
+import { ArrowUp } from "@element-plus/icons-vue";
+import axios from "axios";
+import { ref } from "vue";
 export default {
   components: {
     ArrowUp,
@@ -68,9 +77,15 @@ export default {
     // 接收外部传入的 tableData
     tableData: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
+
+  setup() {
+    const city = ref("广州");
+    return { city };
+  },
+
   data() {
     return {
       showCard: false,
@@ -78,12 +93,29 @@ export default {
       tooltipPosition: { top: 0, left: 0 },
     };
   },
+
   methods: {
+    async fetchDishDetail(id) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8085/api/v1/dishes/${id}`,
+          {
+            params: { city: this.city }, // 使用 this.city
+          }
+        );
+        const dish = response.data.data; // 根据你的 API 结构调整
+        // this.$router.push({ name: 'DishDetail', params: { id } }); // 跳转到详情页面
+        console.log(dish);
+      } catch (error) {
+        console.error("11111111111111111Error fetching dish details:", error);
+      }
+    },
+
     getColor(index) {
-      if (index === 0) return '#ff4d4f'; // 深红色
-      if (index === 1) return '#ffa940'; // 深橙色
-      if (index === 2) return '#ffd666'; // 浅橙色
-      return '#91d5ff'; // 之后颜色改为淡蓝色
+      if (index === 0) return "#ff4d4f"; // 深红色
+      if (index === 1) return "#ffa940"; // 深橙色
+      if (index === 2) return "#ffd666"; // 浅橙色
+      return "#91d5ff"; // 之后颜色改为淡蓝色
     },
     showTooltip(item, event) {
       this.currentItem = item;
@@ -101,13 +133,10 @@ export default {
 
 <style lang="less" scoped>
 .table-container {
-
-
-      
-    position: relative;
-    box-shadow: 12px 12px 2px 1px #a6b2c745;
-    border: 1px solid #a39d9d;
-    border-radius: 4px;
+  position: relative;
+  box-shadow: 12px 12px 2px 1px #a6b2c745;
+  border: 1px solid #a39d9d;
+  border-radius: 4px;
 
   .rank-circle {
     width: 24px;
@@ -171,7 +200,8 @@ export default {
 }
 
 .el-table {
-  th, td {
+  th,
+  td {
     padding: 4px;
     font-size: 12px; // 调整表格字体大小
     text-align: center;
