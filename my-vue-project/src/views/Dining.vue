@@ -222,7 +222,7 @@
                       class="list-item"
                       v-for="restaurant in paginatedRestaurants"
                       :key="restaurant.name"
-                      @click="fetchRestaurantDetails(restaurant.name)"
+                      @click="fetchRestaurantDetails(restaurant.id)"
                     >
                       <div class="card-content">
                         <!-- 图片部分 -->
@@ -292,7 +292,8 @@ const dialogVisible = ref(false);
 const city = ref("广州"); // 默认值可以根据实际需要设置
 const limit = ref(10); // 默认展示数量
 const dishes = ref([]); // 菜品数据
-
+const id = ref([]);
+const restaurantId = ref([]);
 // 在 setup 中定义一个状态来存储餐厅详情
 const restaurantDetails = ref(null);
 import { ref, onMounted, computed } from "vue";
@@ -511,6 +512,7 @@ export default {
 
     const restaurants = ref([
       {
+        id: 101,
         name: "北京路餐厅",
         rating: "No.1",
         latestReview:
@@ -523,6 +525,7 @@ export default {
       },
       // ... (其他餐馆数据)
       {
+        id: 102,
         name: "珠江新城餐厅",
         rating: "No.2",
         latestReview:
@@ -604,23 +607,25 @@ export default {
     });
 
     // 添加一个返回商家的方法
-    const fetchRestaurantDetails = async (restaurantName) => {
+    const fetchRestaurantDetails = async (id) => {
       try {
         const response = await axios.get(
-          "http://localhost:8085/api/v1/restaurants",
+          `http://localhost:8085/api/v1/restaurants/${id}`,
           {
             params: {
+              id: id,
               city: city.value,
-              limit: limit.value,
             },
           }
         );
+        console.log(id);
+        console.log(city);
         // 假设返回的数据结构是一个数组
         const restaurants = response.data.data; // 根据你的 API 返回的数据结构调整
 
         // 查找匹配的餐厅
         const matchedRestaurant = restaurants.find(
-          (restaurant) => restaurant.name === restaurantName
+          (restaurant) => restaurant.id === id
         );
 
         if (matchedRestaurant) {
@@ -628,7 +633,7 @@ export default {
           restaurantDetails.value = matchedRestaurant; // 更新餐厅详情
           dialogVisible.value = true; // 显示弹窗
         } else {
-          console.error("未找到匹配的餐厅:", restaurantName);
+          console.error("未找到匹配的餐厅:", restaurantId);
         }
       } catch (error) {
         console.error("获取餐厅详细信息失败:", error);
@@ -673,6 +678,8 @@ export default {
       fetchRestaurantDetails, // 添加这个方法
       restaurantDetails,
       dialogVisible,
+      id,
+      restaurantId,
     };
   },
 };
