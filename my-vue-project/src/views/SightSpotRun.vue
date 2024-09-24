@@ -26,7 +26,7 @@
           <!-- <el-divider content-position="left">景观简介</el-divider> -->
           <el-row>
             <el-col :span="24" class="tit">
-              土耳其穆拉(Muğla)费特希耶的猫
+              {{ spot.title }}
             </el-col>
           </el-row>
           <el-row>
@@ -134,12 +134,11 @@
                     title="简略内容"
                     direction="ltr"
                     size="35%"
-                    :before-close="handleClose"
-                  >
+                    :before-close="handleClose">
                     <div
                       class="markdown-content"
-                      v-html="renderedBriefContent"
-                    ></div>
+                      v-html="spot.brief_guide">
+                    </div>
                   </el-drawer>
   
                   <!-- 详细内容抽屉 -->
@@ -148,12 +147,11 @@
                     title="详细内容"
                     direction="rtl"
                     size="35%"
-                    :before-close="handleClose"
-                  >
+                    :before-close="handleClose">
                     <div
                       class="markdown-content"
-                      v-html="renderedDetailedContent"
-                    ></div>
+                      v-html="spot.detailed_guide">
+                    </div>
                   </el-drawer>
                 </div>
               </el-col>
@@ -172,15 +170,12 @@
   import { ElCard, ElIcon } from "element-plus";
   import { HomeFilled, Search, User } from "@element-plus/icons-vue";
   import { ElMessageBox } from "element-plus";
-  import { computed } from "vue";
-  import MarkdownIt from "markdown-it";
-  // import { ElCard } from 'element-plus';
+  // import { computed } from "vue";
+  // import MarkdownIt from "markdown-it";
   import { ElButton, ElDrawer } from "element-plus";
   import Header from "@/components/header.vue";
   import axios from "axios";
-  // import Content from "@/components/content.vue";
-  // import MarkdownIt from 'markdown-it';
-  // https://element-plus.org/zh-CN/component/icon
+
   export default {
     name: "SightSpot",
     components: {
@@ -205,7 +200,9 @@
         tips: ''  ,
         brief_guide: '',
         detailed_guide:''
-      }  
+      },
+      showBriefDrawer: false,  
+      showDetailedDrawer: false,  
     };  
   },  
   created() {  
@@ -216,6 +213,9 @@
       try {  
         const response = await axios.get('http://api.doc.jiyou-tech.com/mock/27367/api/v1/attractions/{id}');  
         this.spot = response.data;  
+        this.spot.brief_guide = response.data.brief_guide.replace(/\n/g, '<br>');
+        this.spot.detailed_guide = response.data.detailed_guide.replace(/\n/g, '<br>');
+      
       } catch (error) {  
         console.error('Failed to fetch spot data:', error);  
       }  
@@ -235,8 +235,6 @@
       // 获取数据
       const fetchData = async () => {
         try{
-          const brief_guide = await fetch('http://api.doc.jiyou-tech.com/mock/27367/api/v1/attractions/{id}/brief_guide');
-          const detailed_guide = await fetch('http://api.doc.jiyou-tech.com/mock/27367/api/v1/attractions/{id}/detailed_guide');
           briefContent.value = await brief_guide.data.content;
           detailedContent.value = await detailed_guide.data.content;
         }catch(error){
@@ -247,13 +245,6 @@
       onMounted(() => {
         fetchData();
       });
-
-      // Markdown 渲染
-      // const md = new MarkdownIt();
-      // const renderedBriefContent = computed(() => md.render(briefContent.value));
-      // const renderedDetailedContent = computed(() =>
-      //   md.render(detailedContent.value)
-      // );
   
       // 打开抽屉
       const openDrawer = (type) => {
@@ -277,14 +268,7 @@
   
       // 使用 ref 来创建响应式数据
       const value = ref(3.7);
-      const images = ref([
-        "https://cdn.pixabay.com/photo/2023/06/29/12/28/cats-8096304_960_720.jpg",
-        "https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg",
-        "https://cdn.pixabay.com/photo/2024/05/18/08/16/tomcat-8769861_640.jpg",
-        "https://cdn.pixabay.com/photo/2017/04/30/18/33/kittens-2273598_640.jpg",
-        "https://cdn.pixabay.com/photo/2015/06/07/19/42/animal-800760_640.jpg",
-        "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_1280.jpg",
-      ]);
+      const images = ref([]);
   
       // 返回需要在模板中使用的响应式数据
       return {
