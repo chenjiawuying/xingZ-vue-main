@@ -268,7 +268,7 @@
   
       // 使用 ref 来创建响应式数据
       const value = ref(3.7);
-      const images = ref([]);
+      const images = ref(false);
   
       // 返回需要在模板中使用的响应式数据
       return {
