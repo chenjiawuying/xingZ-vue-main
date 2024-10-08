@@ -57,17 +57,16 @@ GET /api/v1/dishes/rank?city=广州&limit=10
 
 - `city` (string, 必填): 城市名称，例如 `"广州"`。
 - `limit` (int, 可选): 返回的商家数量，默认为 200。最大值为 1000。
-- `area` (string, 可选): 商圈筛选（例如“北京路”、“珠江新城”）。
 
 **请求示例**:
 
-```bash
-GET /api/v1/restaurants?city=广州&limit=10&area=北京路
+```
+GET /api/v1/restaurants?city=广州&limit=200
 ```
 
 **响应参数**:
 
-```json
+```
 {
   "status": "success",
   "data": [
@@ -77,7 +76,8 @@ GET /api/v1/restaurants?city=广州&limit=10&area=北京路
       "score": 4.9,
       "reviews": 200,
       "imageUrl": "https://example.com/restaurants/101.jpg",
-      "area": "北京路"
+      "area": "北京路",
+      "category": "粤菜"
     },
     {
       "id": 102,
@@ -85,15 +85,15 @@ GET /api/v1/restaurants?city=广州&limit=10&area=北京路
       "score": 4.6,
       "reviews": 150,
       "imageUrl": "https://example.com/restaurants/102.jpg",
-      "area": "珠江新城"
+      "area": "珠江新城",
+      "category": "火锅"
     },
     ...
   ],
-  "total": 2
+  "total": 200
 }
-```
 
----
+```
 
 ### 3. 获取美食详情
 
